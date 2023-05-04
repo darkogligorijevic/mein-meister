@@ -7,7 +7,7 @@ const Hero = () => {
             <div className="mx-auto h-full w-[320px] sm:w-[480px]  md:w-[728px] 2xl:w-[1200px] relative z-10">
                 <div className="h-full flex flex-col justify-center gap-2 sm:gap-4 lg:gap-6 text-white">
                     <div className="w-20 h-[2px] bg-white mb-2"></div>
-                    <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Nešto ste skecali i glupi ste da to popravite? Tu je za Vas <span className="text-orange-500">MeinMeister</span></h1>
+                    <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Nešto ste pokvarili i ne znate kako da popravite? Tu je za Vas <span className="text-orange-500">MeinMeister</span></h1>
                     <p className="md:text-lg md:w-1/2">Potrazite majstora po gradu.</p>
                     <SearchBar />
                 </div>
