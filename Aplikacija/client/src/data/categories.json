@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "imgUrl": "https://images.unsplash.com/photo-1495036019936-220b29b930ea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        "title": "Građevinski radovi"
+    },
+    {
+        "id": 2,
+        "imgUrl": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80",
+        "title": "Elektrika"
+    },
+    {
+        "id": 3,
+        "imgUrl": "https://images.unsplash.com/photo-1595856898575-9d187bd32fd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1594&q=80",
+        "title": "Održavanje"
+    },
+    {
+        "id": 4,
+        "imgUrl": "https://images.unsplash.com/photo-1596394723269-b2cbca4e6313?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        "title": "Cevne instalacije"
+    },
+    {
+        "id": 5,
+        "imgUrl": "https://images.unsplash.com/photo-1580810734754-711d6c5d55b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "title": "Obrada materijala"
+    },
+    {
+        "id": 6,
+        "imgUrl": "https://images.unsplash.com/photo-1628058405911-c11ef68d9516?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=654&q=80",
+        "title": "Garderoba i nakit"
+    },
+    {
+        "id": 7,
+        "imgUrl": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        "title": "Održavanje vozila"
+    }
+]
