@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 
 const HttpError = require('./models/HttpError')
+const authRoutes = require('./routes/auth-routes') 
 
 const app = express()
 
@@ -19,11 +20,11 @@ app.use((req,res,next)=>{
 })
 
 
-app.use('/api/posts',);
-app.use('/api/auth',);
-app.use('/api/reviews',);
-app.use('/api/orders',);
-app.use('/api/workers')
+// app.use('/api/posts',);
+app.use('/api/auth',authRoutes);
+// app.use('/api/reviews',);
+// app.use('/api/orders',);
+// app.use('/api/workers',)
 
 app.use((req,res,next)=>{
   const error = new HttpError('There is no such a route, please enter valid url',404)
