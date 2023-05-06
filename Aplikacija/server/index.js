@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const HttpError = require('./models/HttpError')
 const authRoutes = require('./routes/auth-routes')
 const workerRoutes = require('./routes/workers-routes')
+const postRoutes = require('./routes/posts-routes')
 
 const app = express()
 
@@ -23,7 +24,7 @@ app.use((req,res,next)=>{
 
 app.use('/api/auth',authRoutes);
 app.use('/api/workers',workerRoutes)
-// app.use('/api/posts',);
+app.use('/api/posts',postRoutes);
 // app.use('/api/reviews',);
 // app.use('/api/orders',);
 

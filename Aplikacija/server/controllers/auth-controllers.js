@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const HttpError = require('../models/HttpError')
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postUserRegister = async (req,res,next)=>{
   const {ime, prezime, email, password} = req.body;
@@ -44,6 +45,7 @@ res.status(201).json({message:'Successfully created user',firstName:ime,email})
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postUserLogin = async (req,res,next)=>{
   const {password,email} = req.body

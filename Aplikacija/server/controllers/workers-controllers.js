@@ -129,7 +129,6 @@ module.exports.patchWorkerById = async (req,res,next) => {
   console.log(updateWorker)
 
   try {
-
   await Worker.findOneAndUpdate({_id:workerId},updateWorker);
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
