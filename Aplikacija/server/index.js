@@ -20,9 +20,10 @@ app.use((req,res,next)=>{
 
 
 app.use('/api/posts',);
-app.use('/api/users',);
+app.use('/api/auth',);
 app.use('/api/reviews',);
 app.use('/api/orders',);
+app.use('/api/workers')
 
 app.use((req,res,next)=>{
   const error = new HttpError('There is no such a route, please enter valid url',404)
