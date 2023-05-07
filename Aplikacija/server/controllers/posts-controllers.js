@@ -1,3 +1,5 @@
+const {validationResult} = require('express-validator')
+
 const Post = require('../models/Post')
 const Worker = require('../models/Worker')
 const HttpError = require('../models/HttpError')
@@ -5,11 +7,15 @@ const HttpError = require('../models/HttpError')
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postPostcreate = async (req,res,next)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
   const {workerId} = req.params
   const {title,description, city} = req.body
-
   // kasnije cu dodati validation input
-
   let worker;
   try {
     worker = await Worker.findOne({_id:workerId})
@@ -107,7 +113,7 @@ module.exports.getPostByWorkerAll = async (req,res,next) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.deletePostById = async (req,res,next) => {
-  const {postId} = req.params
+  const {postId, workerId} = req.params
   let post;
   try {
     post = await Post.findOne({_id:postId})
@@ -121,17 +127,22 @@ module.exports.deletePostById = async (req,res,next) => {
      return next(error)
   }
 
+
+
   let worker;
   try {
-    worker = await Worker.findOne({_id:post.workerId})
+    worker = await Worker.findOne({_id:workerId})
   } catch(err) {
-    console.log('2')
     const error = new HttpError('Something went wrong',500)
      return next(error)
   }
+  // console.log(worker)
+  // console.log(workerId, worker._id)
+  // console.log(workerId,worker._id.toString())
+  // console.log(workerId !== worker._id.toString())
 
-  if(!worker) {
-    const error = new HttpError('An error occured',404)
+  if(!worker || workerId !== post.workerId.toString()) {
+    const error = new HttpError('There is no such a worker, or you didnt create that post',404)
      return next(error)
   }
   // console.log(worker.posts, postId) debug
@@ -159,14 +170,19 @@ module.exports.deletePostById = async (req,res,next) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.patchPostById = async (req,res,next) => {
-  const {postId} = req.params;
-  const {naziv,desc,grad} = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
+  const {postId,workerId} = req.params;
+  const {title,description, city} = req.body;
 
   let post;
   try {
     post = await Post.findOne({_id:postId})
   } catch(err) {
-    console.log('1')
     const error = new HttpError('Something went wrong',500)
      return next(error)
   }
@@ -176,12 +192,25 @@ module.exports.patchPostById = async (req,res,next) => {
      return next(error)
   }
 
+  let worker;
+  try {
+    worker = await Worker.findOne({_id:workerId})
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+     return next(error)
+  }
+
+  if(!worker || workerId !== post.workerId.toString()) {
+    const error = new HttpError('There is no such a worker, or you didnt create that post',404)
+     return next(error)
+  }
+
   const updatePost = {
     _id: post._id,
     workerId:post.workerId,
-    title: naziv || post.title,
-    description: desc || post.description,
-    city:grad || post.city
+    title: title || post.title,
+    description: description || post.description,
+    city:city || post.city
   }
 
   try {

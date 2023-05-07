@@ -1,10 +1,19 @@
 const bcrypt = require('bcrypt')
+const {validationResult} = require('express-validator')
+
+
 const User = require('../models/User')
 const HttpError = require('../models/HttpError')
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postUserRegister = async (req,res,next)=>{
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
   const {ime, prezime, email, password} = req.body;
   let existingUser
   try {
