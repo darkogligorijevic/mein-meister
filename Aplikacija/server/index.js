@@ -7,7 +7,8 @@ const HttpError = require('./models/HttpError');
 const authRoutes = require('./routes/auth-routes');
 const workerRoutes = require('./routes/workers-routes');
 const postRoutes = require('./routes/posts-routes');
-const orderRoutes = require('./routes/orders-routes')
+const orderRoutes = require('./routes/orders-routes');
+const reviewRoutes = require('./routes/reviews-routes')
 
 const app = express()
 
@@ -27,7 +28,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/workers',workerRoutes)
 app.use('/api/posts',postRoutes);
 app.use('/api/orders',orderRoutes);
-// app.use('/api/reviews',);
+app.use('/api/reviews',reviewRoutes);
 
 app.use((req,res,next)=>{
   const error = new HttpError('There is no such a route, please enter valid url',404)
