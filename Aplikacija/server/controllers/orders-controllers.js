@@ -6,7 +6,7 @@ const HttpError = require('../models/HttpError')
 
 module.exports.postOrderByPostId = async (req,res,next) => {
   const {postId} = req.params;
-  const {phoneNumber,description} = req.body;
+  const {phoneNumber,description, userId} = req.body;
   let post;
   try {
     post = await Post.findOne({_id:postId})
@@ -20,10 +20,10 @@ module.exports.postOrderByPostId = async (req,res,next) => {
     return next(error)
   }
 
-  const {workerId} = post
+
 
   const newOrder = new Order({
-    workerId, // workerId:workerId
+    userId, // kada napravim auth imacu u req
     postId, //postId:postId
     phoneNumber:+phoneNumber,
     description
@@ -47,7 +47,7 @@ module.exports.getOrderById = async (req,res,next) => {
   let order;
   try {
     order = await Order.findOne({_id:orderId})
-    .populate('workerId','-_id -userId')
+    .populate('userId','-_id ')
     .populate('postId','-_id -workerId')
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
@@ -65,7 +65,7 @@ module.exports.getOrdersByPostId = async (req,res,next) => {
   let orders;
   try {
     orders = await Order.find({postId:postId})
-    .populate('workerId','-_id -userId')
+    .populate('userId','-_id ')
     .populate('postId','-_id -workerId')
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
