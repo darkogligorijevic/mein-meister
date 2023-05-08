@@ -1,9 +1,18 @@
+const {validationResult} = require('express-validator')
+
 const Worker = require('../models/Worker')
 const HttpError = require('../models/HttpError')
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postWorkerCreate = async (req,res,next) => {
+  const errors = validationResult(req);
+  console.log(errors)
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
   const {phone,userId} = req.body
 
   const newWorker = new Worker({
@@ -99,6 +108,13 @@ module.exports.deleteWorkerById = async (req,res,next) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.patchWorkerById = async (req,res,next) => {
+  console.log(errors)
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
   const {workerId} = req.params;
   const {phone} = req.body;
 
