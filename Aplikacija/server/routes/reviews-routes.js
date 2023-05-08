@@ -6,14 +6,14 @@ const reviewControllers = require('../controllers/reviews-controllers')
 router.post('/postId/:postId',
 [
   check('star').isFloat({min:1, max:5}),
-  check('reviewText').trim().not().isEmpty().isLength({min:10})
+  check('reviewText').trim().not().isEmpty().isLength({min:5})
 ],
 reviewControllers.postReviewByPostId)
 
 router.patch('/id/:reviewId/post/:postId',
 [
   check('star').isFloat({min:1, max:5}),
-  check('reviewText').trim().not().isEmpty().isLength({min:10})
+  check('reviewText').trim().not().isEmpty().isLength({min:5})
 ]
 ,reviewControllers.patchReviewByPostId)
 

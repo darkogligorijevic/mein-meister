@@ -1,3 +1,5 @@
+const {validationResult} = require('express-validator')
+
 const Order = require('../models/Order');
 const Post = require('../models/Post');
 const HttpError = require('../models/HttpError')
@@ -5,6 +7,12 @@ const HttpError = require('../models/HttpError')
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postOrderByPostId = async (req,res,next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
   const {postId} = req.params;
   const {phoneNumber,description, userId} = req.body;
   let post;
@@ -51,6 +59,11 @@ module.exports.getOrderById = async (req,res,next) => {
     .populate('postId','-_id -workerId')
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
+
+  if(!order) {
+    const error = new HttpError('There is no such an order',404)
     return next(error)
   }
 
