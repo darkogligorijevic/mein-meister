@@ -1,8 +1,16 @@
 const router = require('express').Router()
 const {check} = require('express-validator')
 
+const checkAuth = require('../middlewares/check-auth')
 const postsControllers = require('../controllers/posts-controllers')
 
+router.get('/',postsControllers.getPostAll)
+
+router.get('/:postId',postsControllers.getPostById)
+
+router.get('/worker/:workerId',postsControllers.getPostByWorkerAll)
+
+router.use(checkAuth)
 
 router.post('/:workerId',
 [
@@ -14,12 +22,6 @@ router.post('/:workerId',
   check('city').trim().not()
   .isEmpty()
 ],postsControllers.postPostcreate)
-
-router.get('/',postsControllers.getPostAll)
-
-router.get('/:postId',postsControllers.getPostById)
-
-router.get('/worker/:workerId',postsControllers.getPostByWorkerAll)
 
 router.delete('/delete/:postId/worker/:workerId',postsControllers.deletePostById)
 

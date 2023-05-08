@@ -13,19 +13,21 @@ module.exports.postWorkerCreate = async (req,res,next) => {
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
-  const {phone,userId} = req.body
+  const {phone} = req.body
+  console.log(req.userId)
 
   const newWorker = new Worker({
     phoneNumber:+phone,
-    userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
+    userId:req.userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
     imageUrl:"dummyUrl", //testa radi, kasnije ce biti u req.file.path
     posts:[]
   })
 
   let worker;
   try {
-    worker = await Worker.findOne({userId:userId});
+    worker = await Worker.findOne({userId:req.userId});
   } catch (err) {
+  
     const error = new HttpError('Something went wrong',500)
     return next(error)
   }
@@ -38,6 +40,7 @@ module.exports.postWorkerCreate = async (req,res,next) => {
   try {
   await newWorker.save()
   } catch(err) {
+    console.log('2')
     const error = new HttpError('Something went wrong',500)
     return next(error)
   }
@@ -88,9 +91,9 @@ module.exports.deleteWorkerById = async (req,res,next) => {
     return next(error)
   }
 
-
-  if(!worker) {
-    const error = new HttpError("There is no such a worker, hence you can't delete it",404)
+  console.log(worker.userId, req.userId)
+  if(!worker || worker.userId.toString() !== req.userId.toString()) {
+    const error = new HttpError("There is no such a worker, or you are not allowed to delete this worker",404)
     return next(error)
   }
 
@@ -108,7 +111,6 @@ module.exports.deleteWorkerById = async (req,res,next) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.patchWorkerById = async (req,res,next) => {
-  console.log(errors)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -126,13 +128,13 @@ module.exports.patchWorkerById = async (req,res,next) => {
     return next(error)
   }
 
-  if(!worker) {
-    console.log(worker)
-    const error = new HttpError("There is no such a worker, hence you can't update it",404)
+  console.log(worker.userId,req.userId)
+  if(!worker || worker.userId.toString() !== req.userId.toString()) {
+    const error = new HttpError("There is no such a worker, or you are not allowed to update this worker",404)
     return next(error)
   }
 
-  console.log(worker)
+
 
   const updateWorker = {
     _id:worker._id,
@@ -142,7 +144,6 @@ module.exports.patchWorkerById = async (req,res,next) => {
     posts:[...worker.posts]
   }
 
-  console.log(updateWorker)
 
   try {
   await Worker.findOneAndUpdate({_id:workerId},updateWorker);

@@ -1,9 +1,14 @@
 const router = require('express').Router()
 const {check} = require('express-validator')
 
+const checkAuth = require('../middlewares/check-auth')
 const orderControllers = require("../controllers/orders-controllers")
 
-router.get('/:orderId',orderControllers.getOrderById)
+
+router.use(checkAuth);
+
+router.get('/:orderId',
+orderControllers.getOrderById)
 
 router.post('/post/:postId',
 [

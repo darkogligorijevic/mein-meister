@@ -14,7 +14,7 @@ module.exports.postOrderByPostId = async (req,res,next) => {
     );
   }
   const {postId} = req.params;
-  const {phoneNumber,description, userId} = req.body;
+  const {phoneNumber,description} = req.body;
   let post;
   try {
     post = await Post.findOne({_id:postId})

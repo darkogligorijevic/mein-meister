@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const {validationResult} = require('express-validator')
 
 
@@ -43,6 +44,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
     password:hashedPassword
   })
 
+
   try {
   await newUser.save()
   } catch(err) {
@@ -50,7 +52,9 @@ module.exports.postUserRegister = async (req,res,next)=>{
   return next(error);
 }
 
-res.status(201).json({message:'Successfully created user',firstName:ime,email})
+  
+
+res.status(201).json({message:'Successfully created user',userId:newUser._id,email:newUser.email})
 
 }
 
@@ -63,6 +67,11 @@ module.exports.postUserLogin = async (req,res,next)=>{
     user = await User.findOne({email:email})
   } catch(err) {
     const error = new HttpError('Loggin in failed, please try again later',500)
+    return next(error);
+  }
+
+  if(!user) {
+    const error = new HttpError('There is no such a user, please signup first',401)
     return next(error);
   }
 
@@ -82,8 +91,17 @@ module.exports.postUserLogin = async (req,res,next)=>{
     return next(error);
   }
 
+  let token;
+  try {
+  token = await jwt.sign({userId:user._id,email:user.email},process.env.SECRET_JWT,{expiresIn:'1h'})
+  } catch(err) {
+  const error = new HttpError(
+    'Loging in failed, please try again later.',500);
+    return next(error);
+  }
+
   // generate jwt later
 
-  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email})
+  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,token:token})
 
 }

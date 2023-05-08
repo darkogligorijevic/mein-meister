@@ -15,7 +15,7 @@ module.exports.postPostcreate = async (req,res,next)=>{
   }
   const {workerId} = req.params
   const {title,description, city} = req.body
-  // kasnije cu dodati validation input
+
   let worker;
   try {
     worker = await Worker.findOne({_id:workerId})
