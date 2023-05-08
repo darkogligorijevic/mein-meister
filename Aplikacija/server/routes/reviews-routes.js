@@ -1,7 +1,12 @@
 const router = require('express').Router()
 const {check} = require('express-validator')
 
+const checkAuth = require('../middlewares/check-auth')
 const reviewControllers = require('../controllers/reviews-controllers')
+
+router.get('/all/:postId',reviewControllers.getReviewsByPostId);
+
+router.use(checkAuth)
 
 router.post('/postId/:postId',
 [
@@ -17,9 +22,7 @@ router.patch('/id/:reviewId/post/:postId',
 ]
 ,reviewControllers.patchReviewByPostId)
 
-router.get('/all/:postId',reviewControllers.getReviewsByPostId);
-
-router.delete('/:reviewId/testUserId/:userId',reviewControllers.deleteReviewByPostId); // userId se nece slati preko dynamic path parametara
+router.delete('/:reviewId',reviewControllers.deleteReviewByPostId); // userId se nece slati preko dynamic path parametara
 
 
 module.exports = router;

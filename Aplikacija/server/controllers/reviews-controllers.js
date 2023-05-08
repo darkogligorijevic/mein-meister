@@ -14,8 +14,8 @@ module.exports.postReviewByPostId = async (req,res,next) => {
     );
   }
   const {postId} = req.params
-  const {star, reviewText,userId} = req.body
-  console.log(typeof star)
+  const {star, reviewText} = req.body
+
   let post;
   try {
     post = await Post.findOne({_id:postId})
@@ -31,7 +31,7 @@ module.exports.postReviewByPostId = async (req,res,next) => {
 
   let review;
   try {
-    review = await Review.findOne({userId:userId,postId:postId})
+    review = await Review.findOne({userId:req.userId,postId:postId})
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
@@ -44,7 +44,7 @@ module.exports.postReviewByPostId = async (req,res,next) => {
 
   const newReview = new Review({
     postId, //postId:postId
-    userId, // kasnije u cu u req da dobijem userId ovo je samo testa radi
+    userId:req.userId, // kasnije u cu u req da dobijem userId ovo je samo testa radi
     star: +star,
     reviewText
   })
@@ -69,12 +69,11 @@ module.exports.patchReviewByPostId = async (req,res,next) => {
     );
   }
   const {postId,reviewId} = req.params
-  const {star, reviewText,userId} = req.body
+  const {star, reviewText} = req.body
   let post;
   try {
     post = await Post.findOne({_id:postId})
   } catch(err) {
-    console.log('1')
     const error = new HttpError('Something went wrong',500)
     return next(error)
   }
@@ -88,23 +87,30 @@ module.exports.patchReviewByPostId = async (req,res,next) => {
   try {
     review = await Review.findOne({_id:reviewId})
   } catch(err) {
-    console.log('2')
+    
     const error = new HttpError('Something went wrong',500)
     return next(error)
   }
 
 
+  // console.log(!review)
+  // console.log(review.userId.toString() !== req.userid)
+    // console.log(review.userId.toString() !== req.userId)
+  // console.log(review.postId.toString() !== postId)
+  // console.log(typeof userId,typeof review.userId.toString())
 
-  if (!review || review.userId.toString() !== userId || review.postId.toString() !== postId) {
+  if (!review || review.userId.toString() !== req.userId || review.postId.toString() !== postId) {
     const error = new HttpError('There is no such a review for this post, or you are not allowed to update this review',404)
     return next(error)
   }
 
+
+
   const updateReview = new Review({
     _id:review._id,
     postId, //postId:postId
-    userId, // kasnije u cu u req da dobijem userId ovo je samo testa radi
-    star: +star || review.star,
+    userId:review.userId, // kasnije u cu u req da dobijem userId ovo je samo testa radi
+    star: star || review.star,
     reviewText: reviewText || review.reviewText
   })
 
@@ -153,9 +159,8 @@ module.exports.getReviewsByPostId = async (req,res,next) => {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.deleteReviewByPostId = async (req,res,next) => {
-  const {reviewId,userId} = req.params;
-  console.log(reviewId)
-  console.log(userId)
+  const {reviewId} = req.params;
+
   let review;
   try {
     review = await Review.findOne({_id:reviewId})
@@ -164,11 +169,10 @@ module.exports.deleteReviewByPostId = async (req,res,next) => {
     return next(error)
   }
 
-  console.log(review)
 
 
-  if (!review || review.userId.toString() !== userId ) {
-    console.log('jel doso ovde')
+  if (!review || review.userId.toString() !== req.userId ) {
+ 
     const error = new HttpError('There is no such a review , or you are not allowed to delete this review',404)
     return next(error)
   }

@@ -31,7 +31,7 @@ module.exports.postOrderByPostId = async (req,res,next) => {
 
 
   const newOrder = new Order({
-    userId, // kada napravim auth imacu u req
+    userId:req.userId, 
     postId, //postId:postId
     phoneNumber:+phoneNumber,
     description
