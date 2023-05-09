@@ -36,10 +36,11 @@ module.exports.postUserRegister = async (req,res,next)=>{
     return next(error);
   }
 
+
   const newUser = new User({
     firstName:ime,
     lastName:prezime,
-    imageUrl:'dummy_text', // kasnije cu dodati pravi imageUrl
+    imageUrl:req.file.path, // kasnije cu dodati pravi imageUrl
     email,
     password:hashedPassword
   })
@@ -54,7 +55,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
 
   
 
-res.status(201).json({message:'Successfully created user',userId:newUser._id,email:newUser.email})
+res.json({message:'Successfully created user',userId:newUser._id,email:newUser.email})
 
 }
 

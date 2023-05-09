@@ -22,7 +22,7 @@ router.patch('/id/:reviewId/post/:postId',
 ]
 ,reviewControllers.patchReviewByPostId)
 
-router.delete('/:reviewId',reviewControllers.deleteReviewByPostId); // userId se nece slati preko dynamic path parametara
+router.delete('/:reviewId',reviewControllers.deleteReviewByPostId); 
 
 
 module.exports = router;

@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const fs = require('fs')
+const path = require('path')
 
 const HttpError = require('./models/HttpError');
 const authRoutes = require('./routes/auth-routes');
@@ -12,6 +14,8 @@ const reviewRoutes = require('./routes/reviews-routes')
 
 const app = express()
 
+
+app.use('/public',express.static(path.join(__dirname + 'public')))
 
 app.use(bodyParser.json({extended:false}));
 
@@ -36,6 +40,11 @@ app.use((req,res,next)=>{
 })
 
 app.use((error,req,res,next)=>{
+  if (req.file) { // multer add file property to req if there is a file
+    fs.unlink(req.file.path, (err) => {
+      console.log(err)
+    })
+  }
   res.status(error.code || 500 )
   .json({message: error.message || 'A problem occured'})
 })
