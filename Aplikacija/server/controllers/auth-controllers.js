@@ -40,7 +40,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
   const newUser = new User({
     firstName:ime,
     lastName:prezime,
-    imageUrl:req.file.path, // kasnije cu dodati pravi imageUrl
+    imageUrl:req.file.path.replace(/\\/g, "/"), // kasnije cu dodati pravi 
     email,
     password:hashedPassword
   })
@@ -103,6 +103,6 @@ module.exports.postUserLogin = async (req,res,next)=>{
 
   // generate jwt later
 
-  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,token:token})
+  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token})
 
 }

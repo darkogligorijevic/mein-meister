@@ -13,7 +13,6 @@ module.exports = multer({
       cb(null, 'public/images')
     },
     filename: function (req, file, cb) {
-      console.log(file)
       const ext = MIME_TYPE_MAP[file.mimetype]
       cb(null, uuidv1() + '.' + ext)
     }

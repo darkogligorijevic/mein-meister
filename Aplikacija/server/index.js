@@ -15,7 +15,7 @@ const reviewRoutes = require('./routes/reviews-routes')
 const app = express()
 
 
-app.use('/public',express.static(path.join(__dirname + 'public')))
+app.use('/public/images',express.static(path.join('public','images')))
 
 app.use(bodyParser.json({extended:false}));
 
