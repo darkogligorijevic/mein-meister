@@ -71,7 +71,7 @@ module.exports.postPostcreate = async (req,res,next)=>{
 module.exports.getPostAll = async (req,res,next) => {
   let posts;
   try {
-   posts =  await Post.find({})
+   posts =  await Post.find({}).populate('workerId') //nested populate
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
@@ -86,7 +86,7 @@ module.exports.getPostById = async (req,res,next) => {
   const {postId} = req.params
   let post;
   try {
-    post = await Post.findOne({_id:postId})
+    post = await Post.findOne({_id:postId}).populate('workerId') //nested populate
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
@@ -106,7 +106,7 @@ module.exports.getPostByWorkerAll = async (req,res,next) => {
   const {workerId} = req.params;
   let postsByWorker;
   try {
-    postsByWorker =  await Post.find({workerId:workerId})
+    postsByWorker =  await Post.find({workerId:workerId}).populate('workerId') //nested populate
    } catch(err) {
      const error = new HttpError('Something went wrong',500)
      return next(error)

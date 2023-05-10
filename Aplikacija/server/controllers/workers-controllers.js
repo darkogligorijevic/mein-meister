@@ -19,7 +19,6 @@ module.exports.postWorkerCreate = async (req,res,next) => {
   const newWorker = new Worker({
     phoneNumber:+phone,
     userId:req.userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
-    imageUrl:"dummyUrl", //testa radi, kasnije ce biti u req.file.path
     posts:[]
   })
 
@@ -53,7 +52,7 @@ module.exports.postWorkerCreate = async (req,res,next) => {
 module.exports.getWorkerAll = async (req,res,next) => {
   let workers;
   try {
-    workers = await Worker.find({});
+    workers = await Worker.find({}).populate('userId','-password')
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
@@ -69,7 +68,7 @@ module.exports.getWorkerById = async (req,res,next) => {
 
   let worker;
   try {
-    worker = await Worker.findOne({_id:workerId});
+    worker = await Worker.findOne({_id:workerId}).populate('userId','-password')
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
@@ -140,7 +139,6 @@ module.exports.patchWorkerById = async (req,res,next) => {
     _id:worker._id,
     userId: worker.userId,
     phoneNumber:phone ? +phone : worker.phone,
-    imageUrl:"Dummmy url", // kasnije preko req.file.path 
     posts:[...worker.posts]
   }
 

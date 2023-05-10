@@ -7,7 +7,6 @@ const workerSchema = new mongoose.Schema({
     required:true
   },
   phoneNumber:{type:Number,required:true},
-  imageUrl:{type:String,required:true},
   posts:[
     {type:mongoose.Schema.Types.ObjectId,
     ref:"Post"
