@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const {validationResult} = require('express-validator')
 
 const Post = require('../models/Post')
@@ -12,6 +14,10 @@ module.exports.postPostcreate = async (req,res,next)=>{
     return next(
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
+  }
+  if (!req.file) {
+    const error = new HttpError('No image provided',422)
+    return next(error)
   }
   const {workerId} = req.params
   const {title,description, city} = req.body
@@ -33,7 +39,7 @@ module.exports.postPostcreate = async (req,res,next)=>{
     workerId, // workerId: workerId
     title,
     description,
-    imageUrl:"Dummy post image", // kasnije req.file
+    imageUrl:req.file.path.replace(/\\/g, "/"), 
     city
   })
 
@@ -156,6 +162,11 @@ module.exports.deletePostById = async (req,res,next) => {
     return next(error)
   }
 
+  // fs.unlink(post.imageUrl, (err) => {
+  //   console.log(err)
+  // })
+  clearImage(post.imageUrl)
+
   try {
     await Post.findByIdAndDelete({_id:postId})
   } catch(err) {
@@ -177,7 +188,18 @@ module.exports.patchPostById = async (req,res,next) => {
     );
   }
   const {postId,workerId} = req.params;
-  const {title,description, city} = req.body;
+  const {title,description,city} = req.body;
+  let {imageUrl} = req.body;
+  if(req.file) {
+    imageUrl = req.file.path.replace(/\\/g, "/")
+    console.log('1')
+  }
+  if(!imageUrl) {
+    console.log('2')
+    const error = new HttpError('No file picked',422)
+     return next(error)
+  }
+  
 
   let post;
   try {
@@ -205,9 +227,19 @@ module.exports.patchPostById = async (req,res,next) => {
      return next(error)
   }
 
+  console.log(imageUrl, post.imageUrl)
+  console.log(imageUrl !== post.imageUrl)
+  if (imageUrl !== post.imageUrl) {
+    // fs.unlink(imageUrl, (err) => {
+    //   console.log(err)
+    // })
+    clearImage(post.imageUrl)
+  }
+
   const updatePost = {
     _id: post._id,
     workerId:post.workerId,
+    imageUrl:imageUrl,
     title: title || post.title,
     description: description || post.description,
     city:city || post.city
@@ -224,4 +256,12 @@ module.exports.patchPostById = async (req,res,next) => {
     res.status(202).json({message:"Succesffully updated post"})
 
 
+}
+
+
+const clearImage = filePath => {
+  let imagePath = path.join(__dirname,'..',filePath)
+  fs.unlink(imagePath,(err) => {
+    if(err) return next(err)
+  })
 }

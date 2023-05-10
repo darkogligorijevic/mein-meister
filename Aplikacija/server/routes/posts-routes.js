@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {check} = require('express-validator')
 
+const fileUpload = require('../middlewares/file-upload')
 const checkAuth = require('../middlewares/check-auth')
 const postsControllers = require('../controllers/posts-controllers')
 
@@ -13,6 +14,7 @@ router.get('/worker/:workerId',postsControllers.getPostByWorkerAll)
 router.use(checkAuth)
 
 router.post('/:workerId',
+fileUpload.single('imageUrl'),
 [
   // check('workerId').not().isEmpty().escape(),
   check('title').trim().not()
@@ -25,7 +27,8 @@ router.post('/:workerId',
 
 router.delete('/delete/:postId/worker/:workerId',postsControllers.deletePostById)
 
-router.patch('/update/:postId/worker/:workerId', 
+router.patch('/update/:postId/worker/:workerId',
+fileUpload.single('imageUrl'),
 [
 check('title').trim().not()
 .isEmpty(),

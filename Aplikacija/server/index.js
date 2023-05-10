@@ -58,7 +58,7 @@ mongoose.connect(process.env.MONGODB_URI).then((client)=>{
 })
 .catch((err)=>{
   const error = new HttpError("Can't connect to database, please try again later",500)
-  return next (error)
+  throw error
 })
 
 
