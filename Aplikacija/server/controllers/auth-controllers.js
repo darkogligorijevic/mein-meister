@@ -15,7 +15,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
-  const {ime, prezime, email, password} = req.body;
+  const {firstName, lastName, email, password} = req.body;
   let existingUser
   try {
   existingUser = await User.findOne({email:email})
@@ -37,11 +37,13 @@ module.exports.postUserRegister = async (req,res,next)=>{
   }
 
 
+  const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
+
   const newUser = new User({
-    firstName:ime,
-    lastName:prezime,
-    imageUrl:req.file.path.replace(/\\/g, "/"), // kasnije cu dodati pravi 
-    email,
+    firstName: firstName,
+    lastName: lastName,
+    imageUrl: imageUrl,
+    email: email,
     password:hashedPassword
   })
 

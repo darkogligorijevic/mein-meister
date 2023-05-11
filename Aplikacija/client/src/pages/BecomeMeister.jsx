@@ -1,6 +1,40 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 
 const BecomeMeister = () => {
+  const [inputs, setInputs] = useState({
+    phone: '',
+  });
+
+  const [err, setError] = useState(null)
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      console.log(token)
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      const response = await axios.post(
+        'http://localhost:5000/api/workers',
+        inputs,
+        config
+        );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+      setError(err.response.data.message)
+    }
+  };
+
+  console.log(inputs);
+
   return (
     <div className="flex flex-col justify-center relative h-screen py-[128px] bg-cover bg-no-repeat bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1499815022134-5a333f5a299c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1325&q=80')" }}>
     <div className="absolute inset-0 bg-black opacity-60"></div>
@@ -10,17 +44,15 @@ const BecomeMeister = () => {
           <h1 className='text-white text-4xl font-black text-center'>Postanite Majstor</h1>
         </div>
         <form className='flex flex-col gap-4'>
-          <input className='px-8 py-2 rounded-xl outline-none' name='title' type='text' placeholder='Naslov' />
-          <textarea className='px-8 py-2 rounded-xl outline-none' name='description' placeholder='Deskripcija' />
-          <input className='px-8 py-2 rounded-xl outline-none' name='phone' type='phone' placeholder='Broj telefona' />
-          <select className='px-8 py-2 rounded-xl outline-none'>
-            <option className='px-8 py-2' value="moler">Moler</option>
-            <option className='px-8 py-2' value="elektricar">Električar</option>
-            <option className='px-8 py-2' value="kucni majstor">Kućni majstor</option>
-            <option className='px-8 py-2' value="montazer">Montažer</option>
-          </select>
-          <button className="text-white px-4 py-2 bg-transparent border border-white hover:border-white rounded-xl sm:px-8 sm:hover:scale-105 sm:hover:bg-white sm:hover:text-black sm:duration-300 mt-4 font-black">Postanite majstor</button>
+          <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='phone' type='phone' placeholder='Broj telefona' />
+          <button onClick={handleSubmit} className="text-white px-4 py-2 bg-transparent border border-white hover:border-white rounded-xl sm:px-8 sm:hover:scale-105 sm:hover:bg-white sm:hover:text-black sm:duration-300 mt-4 font-black">Postanite majstor</button>
         </form>
+        {err && 
+          <div className='px-4 py-2 bg-white mt-2'>
+            <p className='text-red-500 self-center'>{err}</p>
+          </div>
+          }
+
       </div>
     </div>
   </div>

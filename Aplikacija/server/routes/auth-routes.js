@@ -8,8 +8,8 @@ router.post('/register',
 fileUpload.single('imageUrl')
 ,
 [
-  check('ime').trim().not().isEmpty().isLength({max:25}),
-  check('prezime').trim().not().isEmpty().isLength({max:25}),
+  check('firstName').trim().not().isEmpty().isLength({max:25}),
+  check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
   check('password').isLength({min:7})
 ],

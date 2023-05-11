@@ -17,9 +17,9 @@ module.exports.postWorkerCreate = async (req,res,next) => {
   console.log(req.userId)
 
   const newWorker = new Worker({
-    phoneNumber:+phone,
-    userId:req.userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
-    posts:[]
+    phoneNumber: +phone,
+    userId: req.userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
+    posts: []
   })
 
   let worker;

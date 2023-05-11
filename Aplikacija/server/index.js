@@ -11,6 +11,7 @@ const workerRoutes = require('./routes/workers-routes');
 const postRoutes = require('./routes/posts-routes');
 const orderRoutes = require('./routes/orders-routes');
 const reviewRoutes = require('./routes/reviews-routes')
+const cors = require('cors')
 
 const app = express()
 
@@ -19,6 +20,9 @@ app.use('/public/images',express.static(path.join('public','images')))
 
 app.use(bodyParser.json({extended:false}));
 
+app.use(express.static('public'));
+
+app.use(cors())
 
 app.use((req,res,next)=>{
   res.setHeader('Access-Control-Allow-Origin','*');
