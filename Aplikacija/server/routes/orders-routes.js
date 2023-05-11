@@ -21,4 +21,6 @@ router.post('/post/:postId',
 
 router.get('/post/:postId',orderControllers.getOrdersByPostId)
 
+router.get('/post/:postId/user/:userId',orderControllers.getOrderByUser) // ??
+
 module.exports = router;

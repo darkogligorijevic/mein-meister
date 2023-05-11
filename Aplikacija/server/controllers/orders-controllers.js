@@ -28,6 +28,18 @@ module.exports.postOrderByPostId = async (req,res,next) => {
     return next(error)
   }
 
+  let order;
+  try {
+    order = await Order.findOne({userId:req.userId,postId:postId})
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
+
+  if(order) {
+    return next(new HttpError('You already created order for this post',409))
+  } // added
+
 
 
   const newOrder = new Order({
@@ -89,3 +101,24 @@ module.exports.getOrdersByPostId = async (req,res,next) => {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+module.exports.getOrderByUser = async (req,res,next) => {
+  const {postId,userId} = req.params;
+
+  let order;
+  try {
+    order = await Order.find({postId:postId,userId:userId}).populate('userId').populate('postId')
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
+
+  if(!order) {
+    const error = new HttpError("There is no such an order",404)
+    return next(error)
+  }
+
+  res.status(200).json(order)
+
+
+}
