@@ -5,8 +5,7 @@ const fileUpload = require('../middlewares/file-upload')
 const authControllers = require('../controllers/auth-controllers')
 
 router.post('/register',
-fileUpload.single('imageUrl')
-,
+fileUpload.single('imageUrl'),
 [
   check('firstName').trim().not().isEmpty().isLength({max:25}),
   check('lastName').trim().not().isEmpty().isLength({max:25}),

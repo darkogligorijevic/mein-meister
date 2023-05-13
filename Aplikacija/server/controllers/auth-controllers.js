@@ -6,9 +6,14 @@ const {validationResult} = require('express-validator')
 const User = require('../models/User')
 const HttpError = require('../models/HttpError')
 
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postUserRegister = async (req,res,next)=>{
+  console.log(req.headers)
+  console.log(req.body)
+  console.log(req.file)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -38,6 +43,8 @@ module.exports.postUserRegister = async (req,res,next)=>{
 
 
   const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
+
+  console.log(typeof imageUrl)
 
   const newUser = new User({
     firstName: firstName,

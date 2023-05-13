@@ -1,48 +1,55 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { useState } from 'react'
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
 
 const Register = () => {
-
   const [inputs, setInputs] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    imageUrl: ""
-  })
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    imageUrl: null,
+  });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
-  }
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const [err, setError] = useState(null)
+  const handleFileChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.files[0] }));
+  };
+
+  const [err, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append('firstName', inputs.firstName)
-    formData.append('lastName', inputs.lastName)
-    formData.append('email', inputs.email)
-    formData.append('password', inputs.password)
-    formData.append('imageUrl', inputs.imageUrl) // assuming that the file input name is 'image'
-    try {
-      await axios.post("http://localhost:5000/api/auth/register", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      navigate("/login")
-    } catch (err) {
-      console.log(err)
-      setError(err.response.data.message)
-    }
-  }
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('firstName', inputs.firstName);
+    formData.append('lastName', inputs.lastName);
+    formData.append('email', inputs.email);
+    formData.append('password', inputs.password);
+    formData.append('imageUrl', inputs.imageUrl);
 
-  const navigate = useNavigate()
-  
-  console.log(inputs)
+    axios
+      .post('http://localhost:5000/api/auth/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response.data.message);
+      });
+  };
+
+  console.log(inputs);
 
   return (
     <div className="flex flex-col justify-center relative h-screen py-[128px] bg-cover bg-no-repeat bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80')" }}>
@@ -57,7 +64,7 @@ const Register = () => {
           </div>
           <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='email' type='email' placeholder='E-mail' />
           <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='password' type='password' placeholder='Lozinka' />
-          <input onChange={handleChange} type='file' name='imageUrl' alt=''/>
+          <input onChange={handleFileChange} type='file' name='imageUrl' alt='' multiple/>
           <button onClick={handleSubmit} className="text-white px-4 py-2 bg-transparent border border-white hover:border-white rounded-xl sm:px-8 sm:hover:scale-105 sm:hover:bg-white sm:hover:text-black sm:duration-300 mt-4 font-black">Pridružite nam se</button>
           {err && 
           <div className='px-4 py-2 bg-white mt-2'>

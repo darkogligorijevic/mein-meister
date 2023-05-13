@@ -1,4 +1,4 @@
-import { Link, } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
 
@@ -12,6 +12,8 @@ const Login = () => {
 
   const [err, setError] = useState(null)
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
     setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
   }
@@ -22,6 +24,7 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/api/auth/login", inputs)
       const token = response.data.token
       localStorage.setItem('token', token)
+      navigate('/')
     } catch (err) {
       console.log(err)
       setError(err.response.data.message)
