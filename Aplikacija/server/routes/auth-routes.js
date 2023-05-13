@@ -11,7 +11,7 @@ fileUpload.single('imageUrl')
   check('ime').trim().not().isEmpty().isLength({max:25}),
   check('prezime').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('password').isLength({min:7})
+  check('password').trim().isLength({min:7})
 ],
 authControllers.postUserRegister);
 
