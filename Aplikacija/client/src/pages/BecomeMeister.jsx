@@ -1,6 +1,9 @@
 import React from 'react';
+import { useState, useContext } from 'react';
+//import { MeisterContext } from '../context/meisterContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
+import { AuthContext } from '../context/authContext';
 
 const BecomeMeister = () => {
   const [inputs, setInputs] = useState({
@@ -8,6 +11,10 @@ const BecomeMeister = () => {
   });
 
   const [err, setError] = useState(null)
+  const navigate = useNavigate()
+
+  const { updateIsMeister } = useContext(AuthContext)
+  //const { becomeMeister } = useContext(MeisterContext)
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -17,16 +24,20 @@ const BecomeMeister = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      console.log(token)
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
       const response = await axios.post(
         'http://localhost:5000/api/workers',
         inputs,
         config
-        );
-      console.log(response);
+      );
+      console.log(config)
+      updateIsMeister(true); // update isMeister in localStorage
+      console.log(response)
+      navigate('/posts')
     } catch (err) {
       console.log(err);
       setError(err.response.data.message)

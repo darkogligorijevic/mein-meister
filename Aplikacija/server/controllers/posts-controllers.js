@@ -8,7 +8,7 @@ const HttpError = require('../models/HttpError')
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.postPostcreate = async (req,res,next)=>{
+module.exports.postCreate = async (req,res,next)=>{
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -20,7 +20,7 @@ module.exports.postPostcreate = async (req,res,next)=>{
     return next(error)
   }
   const {workerId} = req.params
-  const {title,description, city} = req.body
+  const {title, description, city} = req.body
 
   let worker;
   try {
@@ -35,17 +35,19 @@ module.exports.postPostcreate = async (req,res,next)=>{
     return next(error)
   }
 
+  const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
+
   const newPost = new Post({
     workerId, // workerId: workerId
     title,
     description,
-    imageUrl:req.file.path.replace(/\\/g, "/"), 
-    city
+    city,
+    imageUrl: imageUrl 
   })
 
   let post;
   try {
-     post = await newPost.save()
+    post = await newPost.save()
     console.log(post)
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
@@ -71,7 +73,12 @@ module.exports.postPostcreate = async (req,res,next)=>{
 module.exports.getPostAll = async (req,res,next) => {
   let posts;
   try {
-   posts =  await Post.find({}).populate('workerId') //nested populate
+    posts = await Post.find({}).populate({
+      path: 'workerId',
+      populate: {
+        path: 'userId'
+      }
+    });
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)

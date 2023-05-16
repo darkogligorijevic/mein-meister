@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../context/authContext';
+import FileInput from '../components/FileInput';
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -12,14 +14,22 @@ const Register = () => {
     imageUrl: null,
   });
 
+  const {currentUser} = useContext(AuthContext)
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/posts");
+    }
+  }, [currentUser, navigate]);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleFileChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.files[0] }));
+  const handleFileChange = (acceptedFiles) => {
+    setInputs((prev) => ({ ...prev, imageUrl: acceptedFiles[0] }));
   };
 
   const [err, setError] = useState(null);
@@ -52,30 +62,66 @@ const Register = () => {
   console.log(inputs);
 
   return (
-    <div className="flex flex-col justify-center relative h-screen py-[128px] bg-cover bg-no-repeat bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80')" }}>
-    <div className="absolute inset-0 bg-black opacity-60"></div>
-    <div className="flex justify-center absolute right-0 left-0 mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
-      <div className='flex flex-col gap-8 w-full sm:w-2/3 md:w-1/2 2xl:w-1/3 rounded-3xl bg-orange-500 px-8 py-16'>
-        <h1 className='text-white text-4xl font-black self-center'>Registracija</h1>
-        <form className='flex flex-col gap-4'>
-          <div className='flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-4'>
-            <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='firstName' type='text' placeholder='Ime' />
-            <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='lastName' type='text' placeholder='Prezime' />
-          </div>
-          <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='email' type='email' placeholder='E-mail' />
-          <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='password' type='password' placeholder='Lozinka' />
-          <input onChange={handleFileChange} type='file' name='imageUrl' alt='' multiple/>
-          <button onClick={handleSubmit} className="text-white px-4 py-2 bg-transparent border border-white hover:border-white rounded-xl sm:px-8 sm:hover:scale-105 sm:hover:bg-white sm:hover:text-black sm:duration-300 mt-4 font-black">Pridružite nam se</button>
-          {err && 
-          <div className='px-4 py-2 bg-white mt-2'>
-            <p className='text-red-500 self-center'>{err}</p>
-          </div>
-          }
-          <p className='text-white self-center mt-5'>Imate vec nalog? <Link className='font-semibold underline hover:text-gray-200 duration-200' to='/login'>Prijavite se.</Link></p>
-        </form>
+<div class="h-screen md:flex">
+	<div
+		class="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-orange-500 to-orange-700 justify-around items-center hidden"
+    >
+		<div className='flex flex-col gap-2'>
+			<h1 class="text-white font-bold text-4xl font-sans">Pridruzite nam se</h1>
+			<p class="text-white mt-1">Postanite deo naseg sveta.</p>
+      <Link className="border self-start mt-2 border-white text-white px-8 py-2 rounded-xl hover:bg-white hover:text-black hover:scale-105 duration-300 font-black" to='/posts'>Vidite sve usluge</Link>
+		</div>
+		<div class="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+		<div class="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+		<div class="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+		<div class="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+	</div>
+	<div class="flex md:w-1/2 justify-center py-10 items-center bg-white">
+		<form class="bg-white">
+			<h1 class="text-gray-800 font-bold text-2xl lg:text-4xl mb-2">Registracija</h1>
+			<p class="text-sm font-normal text-gray-600 mb-7">Popunite sledecu formu</p>
+      <div className='flex justify-between gap-4'>
+        <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clip-rule="evenodd" />
+          </svg>
+          <input onChange={handleChange} class="pl-2 outline-none border-none" type="text" name='firstName' placeholder='Ime' />
+        </div>
+				<div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+						viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+							d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+					</svg>
+					<input onChange={handleChange} class="pl-2 outline-none border-none" type="text" name='lastName' placeholder='Prezime' />
       </div>
-    </div>
-  </div>
+      </div>
+					<div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+							viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+								d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+						</svg>
+						<input onChange={handleChange} class="pl-2 outline-none border-none" name='email' type='email' placeholder='E-mail' />
+      </div>
+						<div class="flex items-center border-2 py-2 px-3 rounded-2xl">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+								fill="currentColor">
+								<path fill-rule="evenodd"
+									d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+									clip-rule="evenodd" />
+							</svg>
+							<input onChange={handleChange} class="pl-2 outline-none border-none" name='password' type='password' placeholder='Lozinka' />
+      </div>
+              <FileInput name='imageUrl' onChange={handleFileChange} />
+							<button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Pridruzite nam se</button>
+							<span class="text-sm ml-2">Vec imate nalog? <Link className='font-semibold underline hover:text-gray-500 duration-200' to='/login'>Prijavite se.</Link></span>
+              {err && <span className='text-red-500 block text-center bg-gray-200 py-4 mt-2'>{err}</span>}
+		</form>
+	</div>
+</div>
   )
 }
 

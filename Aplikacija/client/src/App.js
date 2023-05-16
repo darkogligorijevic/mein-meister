@@ -9,6 +9,9 @@ import Footer from './components/Footer'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import BecomeMeister from './pages/BecomeMeister'
+import Posts from './pages/Posts'
+import Post from './components/Post'
+import CreatePost from './pages/CreatePost'
 
 const Layout = () => {
   return (
@@ -30,16 +33,20 @@ const router = createBrowserRouter([
         element: <Home />
       },
       {
-        path: "/login",
-        element: <Login />
-      },
-      {
-        path: "/register",
-        element: <Register />
-      },
-      {
         path: "/become-a-meister",
         element: <BecomeMeister />
+      },
+      {
+        path: "/posts",
+        element: <Posts />
+      },
+      {
+        path: "/post/:id",
+        element: <Post />
+      },
+      {
+        path: "/create-post/:id",
+        element: <CreatePost />
       },
     ]
   },
@@ -51,12 +58,30 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />
   },
+    {
+    path: "/become-a-meister",
+    element: <BecomeMeister />
+  },
+  {
+    path: "/posts",
+    element: <Posts />
+  },
+  {
+    path: "/post/:id",
+    element: <Post />
+  },
+  {
+    path: "/create-post/:id",
+    element: <CreatePost />
+  },
 ])
 
 const App = () => {
   return (
     <div>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}>
+        <Layout />
+      </RouterProvider>
     </div>
   )
 }

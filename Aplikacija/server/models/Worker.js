@@ -6,7 +6,7 @@ const workerSchema = new mongoose.Schema({
     ref:"User", 
     required:true
   },
-  phoneNumber:{type:Number,required:true},
+  phoneNumber:{type:String,required:true},
   posts:[
     {type:mongoose.Schema.Types.ObjectId,
     ref:"Post"

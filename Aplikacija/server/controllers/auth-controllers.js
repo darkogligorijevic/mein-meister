@@ -103,15 +103,21 @@ module.exports.postUserLogin = async (req,res,next)=>{
 
   let token;
   try {
-  token = await jwt.sign({userId:user._id,email:user.email},process.env.SECRET_JWT,{expiresIn:'1h'})
+    token = jwt.sign({userId:user._id,email:user.email},process.env.SECRET_JWT)
   } catch(err) {
-  const error = new HttpError(
-    'Loging in failed, please try again later.',500);
+    const error = new HttpError(
+      'Loging in failed, please try again later.',500);
     return next(error);
   }
 
-  // generate jwt later
+  // update user isMeister field if worker is associated with this user
+  try {
+    await User.findOneAndUpdate({_id: req.userId, isMeister: false}, {isMeister: true});
+  } catch (err) {
+    const error = new HttpError('Something went wrong, could not update user', 500);
+    return next(error);
+  }
 
-  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token})
+  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister})
 
 }
