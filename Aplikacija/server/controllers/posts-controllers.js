@@ -93,7 +93,12 @@ module.exports.getPostById = async (req,res,next) => {
   const {postId} = req.params
   let post;
   try {
-    post = await Post.findOne({_id:postId}).populate('workerId') //nested populate
+    post = await Post.findOne({_id:postId}).populate({
+      path: 'workerId',
+      populate: {
+        path: 'userId'
+      }
+    }) //nested populate
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
