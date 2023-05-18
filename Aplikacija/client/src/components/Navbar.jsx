@@ -28,7 +28,11 @@ const Navbar = () => {
   };
 
   const openDropDown = () => {
-    setDropDown(!dropDown);
+    setDropDown(true);
+  }
+
+  const closeDropDown = () => {
+    setDropDown(false);
   }
 
   const proxy = "http://localhost:5000/";
@@ -106,7 +110,7 @@ const Navbar = () => {
                     <div className="flex gap-8 items-center w-1/2 justify-end">
                         { currentUser.isMeister ? <Link to={`/create-post/${worker}`} className="hidden md:block hover:text-gray-300 hover:scale-105 duration-300">Napravite uslugu</Link>  : <Link className="hidden md:block hover:text-gray-300 hover:scale-105 duration-300" to='/become-a-meister'>Postanite majstor</Link> }
                         <Link className="hidden md:block hover:text-gray-300 hover:scale-105 duration-300" to='/posts'>Usluge</Link>
-                        <div onClick={openDropDown} className="relative flex items-center md:gap-2 duration-300 cursor-pointer rounded-full bg-gray-200 py-2 px-4">                    
+                        <div onMouseEnter={openDropDown} onMouseLeave={closeDropDown} className="relative flex items-center md:gap-2 duration-300 cursor-pointer rounded-full bg-gray-200 py-2 px-4">                    
                             <img className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full" src={proxy + currentUser.image} alt={currentUser.userId} />
                             <span className="hidden md:block">{currentUser.firstName}</span>
                             { dropDown ? 

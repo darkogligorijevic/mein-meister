@@ -271,9 +271,14 @@ module.exports.patchPostById = async (req,res,next) => {
 }
 
 
-const clearImage = filePath => {
-  let imagePath = path.join(__dirname,'..',filePath)
-  fs.unlink(imagePath,(err) => {
-    if(err) return next(err)
-  })
-}
+const clearImage = (filePath, next) => {
+  let imagePath = path.join(__dirname, '..', filePath);
+  fs.unlink(imagePath, (err) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    console.log('File deleted successfully');
+    next();
+  });
+};
