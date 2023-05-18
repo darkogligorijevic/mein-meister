@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 
 dayjs.extend(relativeTime);
@@ -13,6 +13,8 @@ const Post = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
+  const [category, setCategory] = useState('');
+  const [price,  setPrice] = useState('')
 
   const params = useParams();
   const navigate = useNavigate()
@@ -23,10 +25,13 @@ const Post = () => {
 
   const fetchPost = async () => {
     const response = await axios.get(`http://localhost:5000/api/posts/${params.id}`);
+    console.log(response.data)
     setPost(response.data);
     setTitle(response.data.title);
     setDescription(response.data.description);
     setCity(response.data.city);
+    setCategory(response.data.category)
+    setPrice(response.data.price)
   };
 
   const fetchReviews = async () => {
@@ -123,7 +128,7 @@ const Post = () => {
 
   return (
     <div>
-      <img className='object-cover w-full lg:h-[30vh]' src={proxy + post.imageUrl} alt={post.imageUrl} />
+      <img className='object-cover w-full lg:h-[60vh]' src={proxy + post.imageUrl} alt={post.imageUrl} />
       <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]'>
         <div className='flex flex-col lg:flex-row gap-4'>
           <div className='flex flex-col lg:w-1/2 lg:gap-4'>
@@ -145,25 +150,26 @@ const Post = () => {
             <div>
             {currentUser && currentUser.userId === userId && (
               <div>
-                <button onClick={updatePost} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                <Link onClick={updatePost} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
                   Azuriraj
-                </button>
-                <button onClick={deletePost} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                </Link>
+                <Link onClick={deletePost} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
                   Obrisi
-                </button>
+                </Link>
               </div>
             )}
           </div>
             <div className='flex flex-col gap-4 lg:gap-8'>
-              <h1 className='text-2xl font-black lg:text-4xl'>{post.title}</h1>
+              <div className='px-4 py-2 mt-5 bg-indigo-500 self-start text-white font-bold'>{category}</div>
+              <h1 className='text-2xl font-black lg:text-4xl'>{title}</h1>
               <p className='text-justify text-gray-800 text-xl font-thin' style={{ whiteSpace: 'pre-line' }}>
-                {post.description}
+                {description}
               </p>
             </div>
             <div className='py-10'>
               <h2 className='text-lg font-bold'>Sta kazu ostali?</h2>
-              <div className='flex flex-col gap-4 py-4'>
-                {reviews.map((review) => (
+              { reviews.length > 0 ? <div className='flex flex-col gap-4 py-4'>
+                {reviews?.map((review) => (
                   <div className='flex flex-col gap-4 p-4 shadow-lg mt-3'>
                     <div className='flex justify-between items-center'>
                       <div className='flex gap-2 items-center'>
@@ -178,13 +184,13 @@ const Post = () => {
                       <p key={review._id} className='italic font-thin'>{review.reviewText}</p>
                   </div>
                 ))}
-              </div>
+              </div> : <p className='mt-5'>Niko jos nije ostavio recenziju {':('}</p>}
             </div>
           </div>
           <div className='flex flex-col gap-4 p-10 lg:sticky lg:border lg:border-gray-200 lg:shadow-lg lg:top-0 lg:h-full lg:w-1/2 lg:mx-auto text-center'>
             <h2 className='text-4xl'>CENOVNIK</h2>
             <p className='text-lg'>
-              Ovaj majstor naplacuje <span className='font-bold'>8$</span> po satu
+              Ovaj majstor naplacuje <span className='font-bold'>{price}din</span> po satu
             </p>
             <button className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
               Zaposli

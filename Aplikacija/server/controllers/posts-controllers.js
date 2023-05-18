@@ -20,7 +20,7 @@ module.exports.postCreate = async (req,res,next)=>{
     return next(error)
   }
   const {workerId} = req.params
-  const {title, description, city} = req.body
+  const {title, description, city, category, price} = req.body
 
   let worker;
   try {
@@ -42,6 +42,8 @@ module.exports.postCreate = async (req,res,next)=>{
     title,
     description,
     city,
+    category,
+    price,
     imageUrl: imageUrl 
   })
 
@@ -199,15 +201,13 @@ module.exports.patchPostById = async (req,res,next) => {
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
-  const {postId,workerId} = req.params;
-  const {title,description,city} = req.body;
+  const {postId, workerId} = req.params;
+  const {title, description, city, category, price} = req.body;
   let {imageUrl} = req.body;
   if(req.file) {
     imageUrl = req.file.path.replace(/\\/g, "/")
-    console.log('1')
   }
   if(!imageUrl) {
-    console.log('2')
     const error = new HttpError('No file picked',422)
      return next(error)
   }
@@ -254,7 +254,9 @@ module.exports.patchPostById = async (req,res,next) => {
     imageUrl:imageUrl,
     title: title || post.title,
     description: description || post.description,
-    city:city || post.city
+    city:city || post.city,
+    category:category || post.category,
+    price: price || post.price
   }
 
   try {
@@ -279,6 +281,5 @@ const clearImage = (filePath, next) => {
       return;
     }
     console.log('File deleted successfully');
-    next();
   });
 };

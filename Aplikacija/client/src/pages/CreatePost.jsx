@@ -4,12 +4,15 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import FileInput from '../components/FileInput';
+import CategorySelection from '../components/CategorySelection';
 
 const CreatePost = () => {
   const [inputs, setInputs] = useState({
     title: '',
     description: '',
     city: '',
+    category: '',
+    price: '',
     imageUrl: null,
   });
 
@@ -28,6 +31,11 @@ const CreatePost = () => {
     setInputs((prev) => ({ ...prev, imageUrl: acceptedFiles[0] }));
   };
 
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setInputs((prev) => ({ ...prev, category: selectedCategory }));
+  };
+
   const [err, setError] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -36,6 +44,8 @@ const CreatePost = () => {
     formData.append('title', inputs.title);
     formData.append('description', inputs.description);
     formData.append('city', inputs.city);
+    formData.append('category', inputs.category);
+    formData.append('price', inputs.price);
     formData.append('imageUrl', inputs.imageUrl);
 
     const token = localStorage.getItem("token")
@@ -73,8 +83,15 @@ const CreatePost = () => {
                     <input onChange={handleChange} name="title" type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                 </div>
                 <div>
-                    <label className="text-white dark:text-gray-200" for="city">Izaberite grad</label>
+                    <label className="flex mb-2 text-white dark:text-gray-200" for="category">Delatnost</label>
+                    <CategorySelection onChange={handleCategoryChange} />                </div>
+                <div>
+                    <label className="flex mb-2 text-white dark:text-gray-200" for="city">Izaberite grad</label>
                     <SearchBar name='city' onCitySelect={handleCitySelect}/>
+                </div>
+                 <div>
+                    <label className="text-white dark:text-gray-200" for="price">Cena</label>
+                    <input onChange={handleChange} name="price" type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                 </div>
                 <div>
                     <label className="text-white dark:text-gray-200" for="description">Deskripcija</label>
