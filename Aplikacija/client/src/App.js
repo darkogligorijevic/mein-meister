@@ -48,6 +48,10 @@ const router = createBrowserRouter([
         path: "/create-post/:id",
         element: <CreatePost />
       },
+      {
+        path: "/settings/:id",
+        element: <CreatePost />
+      },
     ]
   },
   {

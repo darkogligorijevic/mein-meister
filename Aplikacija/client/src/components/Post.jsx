@@ -59,31 +59,6 @@ const Post = () => {
       console.error(error);
     }
   };
-  
-  const updatePost = async () => {
-    try {
-      if (post.workerId && post.workerId._id) {
-        const token = localStorage.getItem('token');
-        await axios.patch(
-          `http://localhost:5000/api/posts/update/${params.id}/worker/${post.workerId._id}`,
-          {
-            title,
-            description,
-            city,
-            imageUrl // Include the imageUrl field in the request
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        navigate(`/post/${params.id}`); // Redirect to updated post after successful update
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
     fetchPost();
@@ -137,7 +112,7 @@ const Post = () => {
                 <img className='w-12 h-12 rounded-full object-cover' src={proxy + imageUrl} alt='' />
                 <div>
                   <p className='font-semibold'>{firstName + ' ' + lastName}</p>
-                  <p className='text-sm font-medium'>{post.city}</p>
+                  <p className='text-sm font-medium'>{city}</p>
                   <p className='italic text-sm'>Postavljeno {createdAt}</p>
                 </div>
               </div>
@@ -150,7 +125,7 @@ const Post = () => {
             <div>
             {currentUser && currentUser.userId === userId && (
               <div>
-                <Link onClick={updatePost} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
                   Azuriraj
                 </Link>
                 <Link onClick={deletePost} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>

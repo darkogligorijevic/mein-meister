@@ -1,8 +1,8 @@
 [
     {
         "id": 1,
-        "imgUrl": "https://images.unsplash.com/photo-1495036019936-220b29b930ea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-        "title": "Građevinski radovi"
+        "imgUrl": "https://plus.unsplash.com/premium_photo-1664301132849-f52af765df79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+        "title": "Vodoinstalater"
     },
     {
         "id": 2,
@@ -11,27 +11,33 @@
     },
     {
         "id": 3,
-        "imgUrl": "https://images.unsplash.com/photo-1595856898575-9d187bd32fd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1594&q=80",
-        "title": "Održavanje"
+        "imgUrl": "https://images.unsplash.com/photo-1590635023142-73c3d34f2805?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        "title": "Kućni majstor"
     },
     {
         "id": 4,
-        "imgUrl": "https://images.unsplash.com/photo-1596394723269-b2cbca4e6313?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-        "title": "Cevne instalacije"
+        "imgUrl": "https://images.unsplash.com/photo-1516962080544-eac695c93791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        "title": "Molerske usluge"
     },
     {
         "id": 5,
-        "imgUrl": "https://images.unsplash.com/photo-1580810734754-711d6c5d55b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        "title": "Obrada materijala"
+        "imgUrl": "https://images.pexels.com/photos/532560/pexels-photo-532560.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "title": "Fasadne usluge"
     },
     {
         "id": 6,
-        "imgUrl": "https://images.unsplash.com/photo-1628058405911-c11ef68d9516?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=654&q=80",
-        "title": "Garderoba i nakit"
+        "imgUrl": "https://plus.unsplash.com/premium_photo-1683120897865-b09acb266810?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        "title": "Gipsani radovi"
     },
     {
         "id": 7,
-        "imgUrl": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-        "title": "Održavanje vozila"
+        "imgUrl": "https://images.pexels.com/photos/8853534/pexels-photo-8853534.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "title": "Demontaže i montaže"
+    },
+    {
+        "id": 8,
+        "imgUrl": "https://plus.unsplash.com/premium_photo-1661342433021-c33cf61549d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        "title": "Farbarske usluge"
     }
+    
 ]

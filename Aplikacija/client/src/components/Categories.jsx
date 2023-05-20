@@ -1,7 +1,9 @@
 import Category from "./Category";
 import categories from '../data/categories.json';
+import { Link } from "react-router-dom";
 
 const Categories = () => {
+
   return (
     <div className="py-[128px]">
       <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
@@ -11,11 +13,12 @@ const Categories = () => {
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
           {categories?.map((category, index) => (
-            <Category
-                key={category.id}
-                imageUrl={category.imgUrl}
-                title={category.title}
-            />
+            <Link to={`/posts?cat=${category.id}`} key={category.id}>
+              <Category
+                  imageUrl={category.imgUrl}
+                  title={category.title}
+              />
+            </Link>
           ))}
         </div>
       </div>
