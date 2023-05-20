@@ -22,14 +22,14 @@ const CategorySelection = ({ onChange, value }) => {
   } else {
     return (
       <select value={value} onChange={onChange} className='px-4 py-2 border border-gray-200 rounded-md outline-none'>
-          <option value='vodoinstalater'>Vodoinstalater</option>
-          <option value='elektricar'>Električar</option>
-          <option value='kucni-majstor'>Kućni majstor</option>
-          <option value='molerske-usluge'>Molerske usluge</option>
-          <option value='fasadne-usluge'>Fasadne usluge</option>
-          <option value='gipsani-radovi'>Gipsani radovi</option>
-          <option value='demontaze-montaze'>Demontaže i montaže</option>
-          <option value='farbarske-usluge'>Farbarske usluge</option>
+          <option value='Vodoinstalater'>Vodoinstalater</option>
+          <option value='Električar'>Električar</option>
+          <option value='Kućni majstor'>Kućni majstor</option>
+          <option value='Molerske usluge'>Molerske usluge</option>
+          <option value='Fasadne usluge'>Fasadne usluge</option>
+          <option value='Gipsani radovi'>Gipsani radovi</option>
+          <option value='Demontaže i montaže'>Demontaže i montaže</option>
+          <option value='Farbarske usluge'>Farbarske usluge</option>
       </select>
     )
   }

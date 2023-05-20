@@ -72,23 +72,34 @@ module.exports.postCreate = async (req,res,next)=>{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.getPostAll = async (req,res,next) => {
+module.exports.getPostAll = async (req, res, next) => {
+  const { cat, city } = req.query;
+
+  let query = {};
+
+  if (cat) {
+    query.category = cat;
+  }
+
+  if (city) {
+    query.city = city;
+  }
+
   let posts;
   try {
-    posts = await Post.find({}).populate({
+    posts = await Post.find(query).populate({
       path: 'workerId',
       populate: {
-        path: 'userId'
-      }
+        path: 'userId',
+      },
     });
-  } catch(err) {
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
+  } catch (err) {
+    const error = new HttpError('Something went wrong', 500);
+    return next(error);
   }
 
   res.status(200).json(posts);
-}
-
+};
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.getPostById = async (req,res,next) => {

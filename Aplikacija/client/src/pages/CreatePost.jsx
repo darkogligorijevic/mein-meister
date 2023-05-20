@@ -105,7 +105,7 @@ const CreatePost = () => {
                 </div>
                 <div>
                     <label className="flex mb-2 text-white dark:text-gray-200" for="category">Delatnost</label>
-                    <CategorySelection value={inputs.category} onChange={handleCategoryChange} /> {/* i don't know how to do it for this one */}                
+                    <CategorySelection value={inputs.category} onChange={handleCategoryChange} />                
                 </div>
                 <div>
                     <label className="flex mb-2 text-white dark:text-gray-200" for="city">Izaberite grad</label>

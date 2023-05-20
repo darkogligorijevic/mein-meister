@@ -12,8 +12,8 @@ const Categories = () => {
           <h2 className="text-2xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl 2xl:text-5xl font-bold lg:w-1/2">Izaberi majstora po kategoriji</h2>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
-          {categories?.map((category, index) => (
-            <Link to={`/posts?cat=${category.id}`} key={category.id}>
+          {categories?.map((category) => (
+            <Link to={`/posts?cat=${category.title}`} key={category.id}>
               <Category
                   imageUrl={category.imgUrl}
                   title={category.title}
