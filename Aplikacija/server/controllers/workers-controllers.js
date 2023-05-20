@@ -128,12 +128,20 @@ module.exports.deleteWorkerById = async (req,res,next) => {
     return next(error)
   }
 
+        // fetch sve postove od workera
+      // prodji array kroz njih i izbrise sve slike
+      // izbrisi sve postove
+      // izacice iz if i izbrisace majstora 
+    // Ako izbrisem workera, moram i sve psotove koje je on napravio
+
   try {
     await Worker.findOneAndDelete({_id:workerId});
   } catch(err) {
     const error = new HttpError('Something went wrong',500)
     return next(error)
   }
+
+
   
   res.json({message:"Meister is deleted."})
 

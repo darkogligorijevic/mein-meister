@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    console.log(req.headers.authorization)
+    // console.log(req.headers.authorization)
     const token = req.headers.authorization.split(' ')[1]; // Authorization: Bearer jwt
     
     if (!token) {
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     }
 
     const decodedToken = jwt.verify(token, process.env.SECRET_JWT);
-
+  
     req.userId = decodedToken.userId;
     next();
   } catch (err) {
