@@ -116,7 +116,7 @@ const Navbar = () => {
                             { dropDown ? 
                                 <div className="flex flex-col absolute top-16 text-center bg-white text-gray-600 right-0 left-0">
                                     <Link className="py-2 w-full border-b border-gray-100 hover:bg-gray-100 duration-200">Zahtevi</Link>
-                                    <Link className="py-2 w-full border-b border-gray-100 hover:bg-gray-100 duration-200">Podesavanja</Link>
+                                    <Link to={`/profile`} className="py-2 w-full border-b border-gray-100 hover:bg-gray-100 duration-200">Moj profil</Link>
                                     <Link onClick={logout} to='/' className="py-2 w-full border-b border-gray-100 hover:bg-gray-100 duration-200">Odjavi se</Link >
                                 </div> : null} 
                         </div>

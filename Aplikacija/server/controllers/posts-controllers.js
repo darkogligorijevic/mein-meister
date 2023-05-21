@@ -288,7 +288,8 @@ const clearImage = (filePath, next) => {
   let imagePath = path.join(__dirname, '..', filePath);
   fs.unlink(imagePath, (err) => {
     if (err) {
-      return next(err);
+      const error = new HttpError('Something went wrong',500)
+      return next(error)
     }
     console.log('File deleted successfully');
   });
