@@ -12,6 +12,7 @@ import BecomeMeister from './pages/BecomeMeister'
 import Posts from './pages/Posts'
 import Post from './components/Post'
 import CreatePost from './pages/CreatePost'
+import Profile from './pages/Profile'
 
 const Layout = () => {
   return (
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
         path: "/create-post/:id",
         element: <CreatePost />
       },
+      {
+        path: "/profile",
+        element: <Profile />
+      },
+
     ]
   },
   {
@@ -74,6 +80,11 @@ const router = createBrowserRouter([
     path: "/create-post/:id",
     element: <CreatePost />
   },
+  {
+    path: "/profile",
+    element: <Profile />
+  },
+
 ])
 
 const App = () => {

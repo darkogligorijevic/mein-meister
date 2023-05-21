@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
@@ -7,18 +7,22 @@ import FileInput from '../components/FileInput';
 import CategorySelection from '../components/CategorySelection';
 
 const CreatePost = () => {
+  const state = useLocation().state
   const [inputs, setInputs] = useState({
-    title: '',
-    description: '',
-    city: '',
-    category: '',
-    price: '',
+    title: state?.title || '',
+    description: state?.description || '',
+    city: state?.city || '',
+    category: state?.category || '',
+    price: state?.price || '',
     imageUrl: null,
   });
 
   const params = useParams()
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const postId = searchParams.get('edit');
   const workerId = params.id
-  console.log(workerId)
+
 
   const navigate = useNavigate();
 
@@ -50,20 +54,37 @@ const CreatePost = () => {
 
     const token = localStorage.getItem("token")
 
-    await axios.post(`http://localhost:5000/api/posts/${workerId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-           Authorization: `Bearer ${token}`,
-        },
+    try {
+      state ? await axios.patch(`http://localhost:5000/api/posts/update/${postId}/worker/${workerId}`, formData, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              console.log(response.data);
+              navigate(`/post/${postId}`);
+            })
+            .catch((error) => {
+              console.log(error);
+              setError(error.response.data.message);       
       })
-      .then((response) => {
-        console.log(response.data);
-        navigate('/posts');
-      })
-      .catch((error) => {
-        console.log(error);
-        setError(error.response.data.message);
-      });
+            : await axios.post(`http://localhost:5000/api/posts/${workerId}`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                 Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              console.log(response.data);
+              navigate('/posts');
+            })
+            .catch((error) => {
+              console.log(error);
+              setError(error.response.data.message);
+            });
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   const handleCitySelect = (selectedCity) => {
@@ -80,29 +101,30 @@ const CreatePost = () => {
             <div className="grid grid-cols-1 gap-6 mt-4">
                 <div>
                     <label className="text-white dark:text-gray-200" for="title">Naslov</label>
-                    <input onChange={handleChange} name="title" type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                    <input value={inputs.title} onChange={handleChange} name="title" type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />  {/* this is working as well as other with input type="text" and type="number" because of value */}
                 </div>
                 <div>
                     <label className="flex mb-2 text-white dark:text-gray-200" for="category">Delatnost</label>
-                    <CategorySelection onChange={handleCategoryChange} />                </div>
+                    <CategorySelection value={inputs.category} onChange={handleCategoryChange} />                
+                </div>
                 <div>
                     <label className="flex mb-2 text-white dark:text-gray-200" for="city">Izaberite grad</label>
-                    <SearchBar name='city' onCitySelect={handleCitySelect}/>
+                    <SearchBar onCitySelect={handleCitySelect} value={inputs.city} /> 
                 </div>
                  <div>
                     <label className="text-white dark:text-gray-200" for="price">Cena</label>
-                    <input onChange={handleChange} name="price" type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                    <input value={inputs.price} onChange={handleChange} name="price" type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                 </div>
                 <div>
                     <label className="text-white dark:text-gray-200" for="description">Deskripcija</label>
-                    <textarea onChange={handleChange} name="description" type="textarea" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"></textarea>
+                    <textarea value={inputs.description} onChange={handleChange} name="description" type="textarea" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"></textarea>
                  </div>
                 <FileInput name='imageUrl' onChange={handleFileChange} />
                 
             </div>
 
             <div className="flex justify-start mt-6">
-                <button onClick={handleSubmit} className="px-8 py-2 leading-5 border font-black hover:scale-105 duration-300 border-white text-white transition-colors duration-200 transform rounded-md hover:bg-black hover:border-transparent focus:outline-none">Napravite uslugu</button>
+                <button onClick={handleSubmit} className="px-8 py-2 leading-5 border font-black hover:scale-105 border-white text-white transition-colors duration-200 transform rounded-md hover:bg-black hover:border-transparent focus:outline-none">Napravite uslugu</button>
             </div>
             {err && <span className='text-red-500 block text-center bg-gray-200 py-4 mt-3'>{err}</span>}
         </form>

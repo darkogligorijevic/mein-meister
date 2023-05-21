@@ -13,6 +13,7 @@ const PostCard = ({
   profileImage,
   firstName,
   lastName,
+  category
 }) => {
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ const PostCard = ({
   };
 
   return (
-    <div className='shadow-xl h-full flex flex-col'>
+    <div className='shadow-xl h-full flex flex-col relative'>
       <div className='relative flex-grow'>
         <LazyLoadImage
           effect='blur'
@@ -38,7 +39,7 @@ const PostCard = ({
             <div className='flex justify-between items-center'>
               <div className='flex gap-4 items-center'>
                 <img
-                  className='w-8 h-8 rounded-full object-cover'
+                  className='w-12 h-12 rounded-full object-cover'
                   src={proxy + profileImage}
                   alt={'profile' + id}
                 />
@@ -62,6 +63,7 @@ const PostCard = ({
           Pogledaj vise
         </button>
       </div>
+      <div className='absolute top-0 left-0 px-4 py-2 bg-gray-900 font-bold text-white'>{category}</div>
     </div>
   );
 };

@@ -23,27 +23,6 @@ const Post = () => {
 
   const proxy = 'http://localhost:5000/';
 
-  const fetchPost = async () => {
-    const response = await axios.get(`http://localhost:5000/api/posts/${params.id}`);
-    console.log(response.data)
-    setPost(response.data);
-    setTitle(response.data.title);
-    setDescription(response.data.description);
-    setCity(response.data.city);
-    setCategory(response.data.category)
-    setPrice(response.data.price)
-  };
-
-  const fetchReviews = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/reviews/all/${params.id}`);
-      console.log(response.data);
-      setReviews(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const deletePost = async () => {
     try {
       if (post.workerId && post.workerId._id) {
@@ -59,36 +38,33 @@ const Post = () => {
       console.error(error);
     }
   };
-  
-  const updatePost = async () => {
-    try {
-      if (post.workerId && post.workerId._id) {
-        const token = localStorage.getItem('token');
-        await axios.patch(
-          `http://localhost:5000/api/posts/update/${params.id}/worker/${post.workerId._id}`,
-          {
-            title,
-            description,
-            city,
-            imageUrl // Include the imageUrl field in the request
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        navigate(`/post/${params.id}`); // Redirect to updated post after successful update
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
+
+    const fetchPost = async () => {
+      const response = await axios.get(`http://localhost:5000/api/posts/${params.id}`);
+      console.log(response.data)
+      setPost(response.data);
+      setTitle(response.data.title);
+      setDescription(response.data.description);
+      setCity(response.data.city);
+      setCategory(response.data.category)
+      setPrice(response.data.price)
+    };
+
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/reviews/all/${params.id}`);
+        console.log(response.data);
+        setReviews(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchPost();
     fetchReviews();
-  }, []);
+  }, [params.id]);
 
   dayjs.locale({
     name: 'sr',
@@ -137,7 +113,7 @@ const Post = () => {
                 <img className='w-12 h-12 rounded-full object-cover' src={proxy + imageUrl} alt='' />
                 <div>
                   <p className='font-semibold'>{firstName + ' ' + lastName}</p>
-                  <p className='text-sm font-medium'>{post.city}</p>
+                  <p className='text-sm font-medium'>{city}</p>
                   <p className='italic text-sm'>Postavljeno {createdAt}</p>
                 </div>
               </div>
@@ -150,7 +126,7 @@ const Post = () => {
             <div>
             {currentUser && currentUser.userId === userId && (
               <div>
-                <Link onClick={updatePost} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
                   Azuriraj
                 </Link>
                 <Link onClick={deletePost} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
@@ -189,12 +165,14 @@ const Post = () => {
           </div>
           <div className='flex flex-col gap-4 p-10 lg:sticky lg:border lg:border-gray-200 lg:shadow-lg lg:top-0 lg:h-full lg:w-1/2 lg:mx-auto text-center'>
             <h2 className='text-4xl'>CENOVNIK</h2>
-            <p className='text-lg'>
+            { price > 0 ? <p className='text-lg'>
               Ovaj majstor naplacuje <span className='font-bold'>{price}din</span> po satu
-            </p>
-            <button className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
+            </p> : <p className='text-lg'>
+              Cena po dogovoru!
+            </p>}
+            { currentUser && currentUser.userId !== userId && ( <button className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
               Zaposli
-            </button>
+            </button>)}
           </div>
         </div>
       </div>

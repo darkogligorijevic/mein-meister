@@ -6,7 +6,9 @@ const GEONAMES_API =
   'http://api.geonames.org/searchJSON?q=Serbia&country=RS&lang=sr&username=darkogligorijevic';
 
 const SearchBar = ({ onCitySelect }) => {
-  const [value, setValue] = useState('');
+  
+  const state = useLocation().state
+  const [value, setValue] = useState(state?.value || '');
   const [cities, setCities] = useState([]);
 
   const location = useLocation();
@@ -28,6 +30,7 @@ const SearchBar = ({ onCitySelect }) => {
     setValue(searchTerm);
     onCitySelect(searchTerm); // Pass the selected city to the callback function
   };
+
 
   if (location.pathname.startsWith('/create-post/') || location.pathname === '/posts') {
     return (
