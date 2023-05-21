@@ -137,7 +137,7 @@ module.exports.updateUserLogIn = async (req,res,next) => {
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
-  const {ime,prezime,email,sifra} = req.body;
+  const {firstName,lastName,email,password} = req.body;
   let {imageUrl} = req.body;
   if(req.file) {
     imageUrl = req.file.path.replace(/\\/g, "/")
@@ -160,15 +160,29 @@ module.exports.updateUserLogIn = async (req,res,next) => {
   }
 
 
-  let hashedPassword;
-  if (sifra) {
+  let isItSame;
   try {
-  hashedPassword = await bcrypt.hash(sifra,12);
+  isItSame = await bcrypt.compare(password,user.password);
   } catch(err) {
     const error = new HttpError('Something went wrong')
     return next(error);
   }
-}
+
+  console.log(isItSame)
+
+  let hashedPassword;
+  if(!isItSame) {
+    try {
+    hashedPassword = await bcrypt.hash(password,12);
+    } catch(err) {
+      const error = new HttpError('Something went wrong')
+      return next(error);
+    }
+  } 
+  
+
+
+console.log(hashedPassword);
 
 if (imageUrl !== user.imageUrl) {
   // fs.unlink(imageUrl, (err) => {
@@ -178,8 +192,8 @@ if (imageUrl !== user.imageUrl) {
 }
 
   const updateUser = {
-    firstName: ime || user.firstName,
-    lastName: prezime || user.lastName,
+    firstName: firstName || user.firstName,
+    lastName: lastName || user.lastName,
     email: email || user.email,
     imageUrl: imageUrl,
     password: hashedPassword || user.password
@@ -218,13 +232,33 @@ module.exports.deleteUserLogin = async (req,res,next) => {
     try {
       worker = await Worker.findOne({userId:user._id});
     } catch(err) {
-      const error = new HttpError('Updating failed, please try again later',500)
+      const error = new HttpError('Something went wrong',500)
       return next(error);
     }
 
     if(!worker) {
       const error = new HttpError("There is no such a worker",404)
       return next(error)
+    }
+
+    let posts;
+    try {
+      posts = await Post.find({workerId:worker._id})
+    } catch(err) {
+      const error = new HttpError('Findig posts failed, please try again later',500)
+      return next(error);
+    }
+
+    const output = posts.map((post)=>{
+      clearImage(post.imageUrl);
+    })
+
+
+    try {
+      await Post.deleteMany({workerId:worker._id})
+    } catch(err) {
+      const error = new HttpError('Something went wrong',500)
+      return next(error);
     }
 
       // fetch sve postove od workera
@@ -234,8 +268,6 @@ module.exports.deleteUserLogin = async (req,res,next) => {
       // Ako izbrisem workera, moram i sve psotove koje je on napravio
 
 
-
-  
     try {
       await Worker.findOneAndDelete({_id:worker._id});
     } catch(err) {
@@ -245,18 +277,18 @@ module.exports.deleteUserLogin = async (req,res,next) => {
 
   }
 
-  // console.log(typeof req.userId, typeof user._id);
+  console.log(typeof req.userId, typeof user._id);
 
-  // clearImage(user.imageUrl)
+  clearImage(user.imageUrl)
 
-  // try {
-  //   await User.findByIdAndDelete({_id:user._id})
-  // } catch(err) {
-  //   const error = new HttpError('Something went wrong',500)
-  //   return next(error)
-  // }
+  try {
+    await User.findByIdAndDelete({_id:user._id})
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
 
-  // res.status(200).json({message:"Successfully deleted post"})
+  res.status(200).json({message:"Successfully deleted user"})
 
 
 }

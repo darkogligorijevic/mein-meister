@@ -19,7 +19,7 @@ router.post(
   [
     check('title').trim().not().isEmpty(),
     check('description').trim().not().isEmpty().isLength({ min: 5 }),
-    check('city').trim().not().isEmpty(),
+    check('city').trim().not().isEmpty() 
   ],
   postsControllers.postCreate
 );

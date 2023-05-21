@@ -10,6 +10,8 @@ const HttpError = require('../models/HttpError')
 
 module.exports.postCreate = async (req,res,next)=>{
   const errors = validationResult(req);
+  console.log(errors);
+  console.log('ovde');
   if (!errors.isEmpty()) {
     return next(
       new HttpError('Invalid inputs passed, please check your data.', 422)
@@ -47,6 +49,8 @@ module.exports.postCreate = async (req,res,next)=>{
     imageUrl: imageUrl 
   })
 
+
+  console.log(newPost);
   let post;
   try {
     post = await newPost.save()

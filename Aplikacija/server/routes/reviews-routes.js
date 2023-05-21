@@ -6,7 +6,9 @@ const reviewControllers = require('../controllers/reviews-controllers')
 
 router.get('/all/:postId',reviewControllers.getReviewsByPostId);
 
-router.use(checkAuth)
+router.get('/average/:postId',reviewControllers.getReviewsAverage);
+
+router.use(checkAuth);
 
 router.post('/postId/:postId',
 [

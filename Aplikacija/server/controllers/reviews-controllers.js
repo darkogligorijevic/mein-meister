@@ -189,3 +189,37 @@ module.exports.deleteReviewByPostId = async (req,res,next) => {
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
+module.exports.getReviewsAverage = async (req,res,next) => {
+  const {postId} = req.params
+  let post;
+  try {
+    post = await Post.findOne({_id:postId})
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
+
+  if (!post) {
+    const error = new HttpError('There is no such a post',404)
+    return next(error)
+  }
+
+  let reviews;
+  try {
+    reviews = await Review.find({postId:postId})
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
+
+  const length = reviews.length
+  const sum = reviews.reduce((acc,curr)=>{
+    return acc += curr.star;
+  },0)
+
+
+  res.status(200).json({average:sum/length});
+
+}

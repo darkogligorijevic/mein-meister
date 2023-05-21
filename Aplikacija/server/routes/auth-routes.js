@@ -25,10 +25,10 @@ router.patch('/update',
 fileUpload.single('imageUrl'),
 [
   // ovo ime, prezime, email, sifra samo treba da se promeni kao gore, to sam zaboravio
-  check('ime').trim().not().isEmpty().isLength({max:25}),
-  check('prezime').trim().not().isEmpty().isLength({max:25}),
+  check('firstName').trim().not().isEmpty().isLength({max:25}),
+  check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('sifra').isLength({min:7})
+  check('password').isLength({min:7})
 ],
 authControllers.updateUserLogIn);
 
