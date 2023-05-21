@@ -94,6 +94,7 @@ const Posts = () => {
                   profileImage={post.workerId.userId.imageUrl}
                   firstName={post.workerId.userId.firstName}
                   lastName={post.workerId.userId.lastName}
+                  category={post.category}
                 />
               </div>
             ))}

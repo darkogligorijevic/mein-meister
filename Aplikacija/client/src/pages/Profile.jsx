@@ -44,9 +44,9 @@ const Profile = () => {
                 </div>            
             </div>
             {posts?.map(post => (
-                <div className='flex flex-col md:flex-row md:mt-32 gap-4 shadow-lg mt-16' key={post._id}>
+                <div className='flex flex-col md:flex-row md:mt-32 gap-4 shadow-lg mt-16 odd:flex-row-reverse' key={post._id}>
                     <img className='md:w-1/2' src={proxy + post.imageUrl} alt=''/>
-                    <div className='flex flex-col md:justify-around gap-4 px-6 py-4'>
+                    <div className='flex flex-col md:justify-center gap-6 px-6 py-4'>
                         <h2 className='text-lg font-bold md:text-3xl md:font-black'>{post.title}</h2>
                         <p className='font-medium text-xl'>{post.city}</p>
                         <TruncatedText text={post.description} maxLength={40} location={`/post/${post._id}`}/>
@@ -76,6 +76,14 @@ const Profile = () => {
                     </div>
                 </div>
             ))}
+            <div className='mt-16 flex flex-row gap-4'>
+            <Link className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                  Azuriraj Profil
+                </Link>
+                <Link className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
+                  Obrisi Profil
+                </Link>
+            </div>
         </div> 
     </div>
   )
