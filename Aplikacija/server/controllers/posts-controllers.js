@@ -288,7 +288,7 @@ module.exports.patchPostById = async (req,res,next) => {
 }
 
 
-const clearImage = (filePath, next) => {
+const clearImage = (filePath) => {
   let imagePath = path.join(__dirname, '..', filePath);
   fs.unlink(imagePath, (err) => {
     if (err) {

@@ -59,7 +59,7 @@ const Navbar = () => {
                     </div>  
                      
                         :
-                        <div className="hidden md:block flex items-center gap-4">
+                        <div className="hidden md:block items-center gap-4">
                             <div className="items-center flex gap-8">
                                 <Link className="hover:text-gray-300 hover:scale-105 duration-300" to='/posts'>Usluge</Link>
                                 <Link className="hover:text-gray-300 hover:scale-105 duration-300" to='/login'>Prijavite se</Link>
