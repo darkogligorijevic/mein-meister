@@ -17,26 +17,25 @@ const Login = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (currentUser) {
-      navigate("/posts");
+    if (currentUser && inputs.email !== '' && inputs.password !== '') {
+      navigate('/posts');
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, inputs, navigate]);
 
   const handleChange = (e) => {
     setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      login(inputs)
-      navigate('/posts')
+      await login(inputs);
+      navigate('/posts');
     } catch (err) {
-      console.log(err)
-      setError(err.response.data.message)
+      console.log(err);
+      setError(err.response.data.message);
     }
-
-  }
+  };
 
   console.log(inputs)
 
@@ -67,7 +66,7 @@ const Login = () => {
           </div>
                   <button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Prijavi se</button>
                   <span class="text-sm ml-2">Nemate nalog? <Link className='font-semibold underline hover:text-gray-500 duration-200' to='/register'>Registrujte se.</Link></span>
-                  {err && <span className='text-red-500 block text-center bg-gray-200 py-4 mt-2'>{err}</span>}
+                  {err && <span className='text-red-500 block text-center bg-gray-200 px-4 py-2 mt-2'>{err}</span>}
         </form>
       </div>
       <div

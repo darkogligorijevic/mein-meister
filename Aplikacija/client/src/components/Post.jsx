@@ -138,9 +138,7 @@ const Post = () => {
             <div className='flex flex-col gap-4 lg:gap-8'>
               <div className='px-4 py-2 mt-5 bg-indigo-500 self-start text-white font-bold'>{category}</div>
               <h1 className='text-2xl font-black lg:text-4xl'>{title}</h1>
-              <p className='text-justify text-gray-800 text-xl font-thin' style={{ whiteSpace: 'pre-line' }}>
-                {description}
-              </p>
+              <div dangerouslySetInnerHTML={{__html: description}} />
             </div>
             <div className='py-10'>
               <h2 className='text-lg font-bold'>Sta kazu ostali?</h2>
