@@ -13,6 +13,8 @@ import Posts from './pages/Posts'
 import Post from './components/Post'
 import CreatePost from './pages/CreatePost'
 import Profile from './pages/Profile'
+import CreateOrder from './pages/CreateOrder'
+import Orders from './pages/Orders'
 
 const Layout = () => {
   return (
@@ -53,7 +55,14 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Profile />
       },
-
+      {
+        path: "/create-order/:id",
+        element: <CreateOrder />
+      },
+      {
+        path: "/orders",
+        element: <Orders />
+      }
     ]
   },
   {
@@ -84,6 +93,14 @@ const router = createBrowserRouter([
     path: "/profile",
     element: <Profile />
   },
+  {
+    path: "/create-order/:id",
+    element: <CreateOrder />
+  },
+  {
+    path: "/orders",
+    element: <Orders />
+  }
 
 ])
 

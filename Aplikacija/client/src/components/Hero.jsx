@@ -8,7 +8,7 @@ const Hero = () => {
                     <div className="w-20 h-[2px] bg-white mb-2"></div>
                     <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Nešto ste pokvarili i ne znate kako da popravite? Tu je za Vas <span className="text-orange-500">MeinMeister</span></h1>
                     <p className="md:text-lg md:w-1/2">Potrazite majstora po gradu.</p>
-                    <PrimaryButton content="Vidite sve usluge" link='/posts' primaryColor="white" secondaryColor="black"/>
+                    <PrimaryButton content="Vidite sve usluge" link='/posts' primaryColor="white" secondaryColor="black" adjustments="rounded-xl"/>
                 </div>
             </div>
     </div>

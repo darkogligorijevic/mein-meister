@@ -104,6 +104,7 @@ module.exports.getPostAll = async (req, res, next) => {
 
   res.status(200).json(posts);
 };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.getPostById = async (req,res,next) => {

@@ -168,9 +168,9 @@ const Post = () => {
             </p> : <p className='text-lg'>
               Cena po dogovoru!
             </p>}
-            { currentUser && currentUser.userId !== userId && ( <button className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
+            { currentUser && currentUser.userId !== userId && ( <Link to={`/create-order/${params.id}`} className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
               Zaposli
-            </button>)}
+            </Link>)}
           </div>
         </div>
       </div>

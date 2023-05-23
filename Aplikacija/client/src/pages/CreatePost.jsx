@@ -17,7 +17,7 @@ const CreatePost = () => {
     city: state?.city || '',
     category: state?.category || '',
     price: state?.price || '',
-    imageUrl: null,
+    imageUrl: state?.imageUrl || null,
   });
 
   const params = useParams()
