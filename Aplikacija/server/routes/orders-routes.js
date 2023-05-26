@@ -18,8 +18,9 @@ router.post('/post/:postId',
 ,orderControllers.postOrderByPostId)
 
 router.get('/worker/:workerId', orderControllers.getAllOrdersByWorkerId)
+router.get('/user/:userId', orderControllers.getAllOrdersByUserId)
 
-// router.patch('/:orderId', orderControllers.updateOrderById);
+router.put('/:orderId', orderControllers.updateOrderById);
 
 // router.get('/post/:postId',orderControllers.getOrdersByPostId)
 

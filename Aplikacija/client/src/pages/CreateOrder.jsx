@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
-import { DatePicker } from 'react-rainbow-components';
+import { DateTimePicker } from 'react-rainbow-components';
+import { DateTime } from 'luxon';
 
 const CreateOrder = () => {
   const [inputs, setInputs] = useState({
     phoneNumber: '',
     description: '',
-    selectedDate: null, // Add selectedDate to inputs state
+    scheduledDate: null
   });
-
+  const [workerId, setWorkerId] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [unavailableDates, setUnavailableDates] = useState([]);
   const [err, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -26,6 +29,30 @@ const CreateOrder = () => {
     setInputs((prev) => ({ ...prev, description: value }));
   };
 
+  const fetchWorkerId = useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/posts/${postId}`);
+      setWorkerId(response.data.workerId._id);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [postId]);
+
+  const fetchOrdersByWorkerId = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      };
+      const response = await axios.get(`http://localhost:5000/api/orders/worker/${workerId}`, config);
+      setOrders(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [workerId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,12 +62,22 @@ const CreateOrder = () => {
           Authorization: `Bearer ${token}`,
         },
       };
+
+      // Convert the selected time to the server's timezone
+      const selectedTime = DateTime.fromJSDate(inputs.scheduledDate).setZone('Europe/London');
+      const convertedTime = selectedTime.toISO();
+
+      const data = {
+        ...inputs,
+        scheduledDate: convertedTime,
+      };
+
       const response = await axios.post(
         `http://localhost:5000/api/orders/post/${postId}`,
-        inputs,
+        data,
         config
       );
-      console.log(config);
+
       console.log(response);
       navigate('/posts');
     } catch (err) {
@@ -50,10 +87,25 @@ const CreateOrder = () => {
   };
 
   const handleDateChange = (value) => {
-    setInputs((prev) => ({ ...prev, selectedDate: value })); // Update selectedDate in inputs state
+    setInputs((prev) => ({ ...prev, scheduledDate: value }));
   };
 
-  console.log(inputs);
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchWorkerId();
+      await fetchOrdersByWorkerId();
+    };
+
+    fetchData();
+  }, [fetchWorkerId, fetchOrdersByWorkerId]);
+
+  useEffect(() => {
+    const dates = orders.map((order) => {
+      const scheduledDate = DateTime.fromISO(order.scheduledDate).setZone('Europe/London').toJSDate();
+      return scheduledDate;
+    });
+    setUnavailableDates(dates);
+  }, [orders]);
 
   return (
     <div className="py-[128px]">
@@ -84,13 +136,18 @@ const CreateOrder = () => {
                 />
               </div>
               <div className="w-1/3">
-                <DatePicker
-                  value={inputs.selectedDate}
+                <DateTimePicker
+                  value={inputs.scheduledDate}
                   onChange={handleDateChange}
-                  placeholder="Izaberite datum"
+                  placeholder="Izaberite datum i vreme"
                   formatStyle="medium"
                   borderRadius="semi-square"
-                  name='scheduledDate'
+                  name="scheduledDate"
+                  hour24={true}
+                  locale="sr"
+                  minDate={new Date()}
+                  unavailableDates={unavailableDates}
+                  required={true}
                 />
               </div>
             </div>

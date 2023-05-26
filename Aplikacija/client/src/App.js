@@ -15,6 +15,7 @@ import CreatePost from './pages/CreatePost'
 import Profile from './pages/Profile'
 import CreateOrder from './pages/CreateOrder'
 import Orders from './pages/Orders'
+import SingleOrder from './pages/SingleOrder'
 
 const Layout = () => {
   return (
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "/orders",
         element: <Orders />
+      },
+      {
+        path: "/order/:id",
+        element: <SingleOrder />
       }
     ]
   },
@@ -100,6 +105,10 @@ const router = createBrowserRouter([
   {
     path: "/orders",
     element: <Orders />
+  },
+  {
+    path: "/order/:id",
+    element: <SingleOrder />
   }
 
 ])

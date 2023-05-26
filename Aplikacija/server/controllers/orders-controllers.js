@@ -143,33 +143,58 @@ module.exports.getAllOrdersByWorkerId = async (req, res, next) => {
 
 }
 
-// module.exports.updateOrderById = async (req, res, next) => {
-//   const orderId = req.params.orderId;
-//   const { isAccepted, scheduledDate } = req.body;
+module.exports.getAllOrdersByUserId = async (req, res, next) => {
+  const {userId} = req.params;
 
-//   let order;
-//   try {
-//     order = await Order.findById(orderId);
-//   } catch (err) {
-//     const error = new HttpError('Something went wrong', 500);
-//     return next(error);
-//   }
+  let order;
+  try {
+    order = await Order.find({userId:userId}).populate('postId').populate('userId').populate({
+      path: 'workerId',
+      populate: {
+        path: 'userId'
+      }
+    })
+  } catch(err) {
+    const error = new HttpError('Something went wrong',500)
+    return next(error)
+  }
 
-//   if (!order) {
-//     const error = new HttpError('Order not found', 404);
-//     return next(error);
-//   }
+  if(!order) {
+    const error = new HttpError("There is no such an order",404)
+    return next(error)
+  }
 
-//   order.isAccepted = isAccepted;
-//   order.scheduledDate = scheduledDate;
+  res.status(200).json(order)
 
-//   try {
-//     await order.save();
-//   } catch (err) {
-//     const error = new HttpError('Something went wrong', 500);
-//     return next(error);
-//   }
+}
 
-//   res.json({ message: 'Order updated successfully' });
-// };
+module.exports.updateOrderById = async (req, res, next) => {
+  const orderId = req.params.orderId;
+  const { isAccepted, scheduledDate } = req.body;
+
+  let order;
+  try {
+    order = await Order.findById(orderId);
+  } catch (err) {
+    const error = new HttpError('Something went wrong', 500);
+    return next(error);
+  }
+
+  if (!order) {
+    const error = new HttpError('Order not found', 404);
+    return next(error);
+  }
+
+  order.isAccepted = isAccepted;
+  order.scheduledDate = scheduledDate;
+
+  try {
+    await order.save();
+  } catch (err) {
+    const error = new HttpError('Something went wrong', 500);
+    return next(error);
+  }
+
+  res.json({ message: 'Order updated successfully' });
+};
 

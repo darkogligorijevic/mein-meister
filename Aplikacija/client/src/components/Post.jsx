@@ -136,7 +136,7 @@ const Post = () => {
             )}
           </div>
             <div className='flex flex-col gap-4 lg:gap-8'>
-              <div className='px-4 py-2 mt-5 bg-indigo-500 self-start text-white font-bold'>{category}</div>
+              <div className='px-4 py-2 mt-5 bg-gray-600 self-start text-white font-bold'>{category}</div>
               <h1 className='text-2xl font-black lg:text-4xl'>{title}</h1>
               <div dangerouslySetInnerHTML={{__html: description}} />
             </div>

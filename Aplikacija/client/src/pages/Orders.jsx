@@ -8,7 +8,7 @@ const Orders = () => {
             <div className='flex flex-col gap-12'>
                 <div>
                     <div className="w-20 h-[2px] bg-gray-400 mb-5"></div>
-                    <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Zahtevi</h1>
+                    <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Obavestenja</h1>
                 </div>
                 <div>
                     <Order 
