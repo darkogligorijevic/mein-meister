@@ -1,10 +1,10 @@
-const fs = require('fs')
-const path = require('path')
+
 const {validationResult} = require('express-validator')
 
-const Post = require('../models/Post')
-const Worker = require('../models/Worker')
-const HttpError = require('../models/HttpError')
+const Post = require('../models/Post');
+const Worker = require('../models/Worker');
+const clearImage = require('../util/clear-image');
+const HttpError = require('../models/HttpError');
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,13 +278,4 @@ module.exports.patchPostById = async (req,res,next) => {
 }
 
 
-const clearImage = (filePath) => {
-  let imagePath = path.join(__dirname, '..', filePath);
-  fs.unlink(imagePath, (err) => {
-    if (err) {
-      const error = new HttpError('Something went wrong',500)
-      return next(error)
-    }
-    console.log('File deleted successfully');
-  });
-};
+

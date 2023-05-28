@@ -22,14 +22,16 @@ const io = require('socket.io')(server);
 
 app.use('/public/images', express.static(path.join('public', 'images')));
 app.use(bodyParser.json({ extended: false })); // application/json
-// app.use(express.static('public'));
 app.use(cors());
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With,Content-Type,Accept,Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With,Content-Type,Accept,Authorization');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+// if(req.method === 'OPTIONS) {
+//   return next();
+// }
+//   next();
+// });
 app.use((req, res, next) => {
   req.io = io;
   next();

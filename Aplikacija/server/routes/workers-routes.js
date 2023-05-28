@@ -6,9 +6,9 @@ const workersControllers = require('../controllers/workers-controllers');
 
 
 
-router.get('/',workersControllers.getWorkerAll);
+router.get('/',workersControllers.getWorkerAll); // mozda treba da se brise
 
-router.get('/:workerId',workersControllers.getWorkerById);
+router.get('/:workerId',workersControllers.getWorkerById); // mozda treba da se brise
 
 router.get('/userId/:userId', workersControllers.getWorkerByUserId);
 

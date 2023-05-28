@@ -13,7 +13,7 @@ orderControllers.getOrderById)
 router.post('/post/:postId',
 [
   check('phoneNumber').matches(/^(\+381|0)6[0-9]{1}([0-9]{7}|[0-9]{6}|[0-9]{5}|[0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})$/),
-  check('description').trim().not().isEmpty().isLength({min:5})
+  check('description').trim().not().isEmpty()
 ]
 ,orderControllers.postOrderByPostId)
 

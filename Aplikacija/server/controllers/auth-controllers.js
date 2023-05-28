@@ -1,6 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {validationResult} = require('express-validator')
@@ -9,6 +6,7 @@ const {validationResult} = require('express-validator')
 const User = require('../models/User');
 const Worker = require('../models/Worker');
 const Post = require('../models/Post');
+const clearImage = require('../util/clear-image');
 const HttpError = require('../models/HttpError');
 
 
@@ -117,13 +115,6 @@ module.exports.postUserLogin = async (req,res,next)=>{
     return next(error);
   }
 
-  // update user isMeister field if worker is associated with this user
-  try {
-    await User.findOneAndUpdate({_id: req.userId, isMeister: false}, {isMeister: true});
-  } catch (err) {
-    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
-    return next(error);
-  }
 
   res.status(200).json({message:'Uspešno ste se ulogovali',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister})
 
@@ -264,7 +255,8 @@ module.exports.deleteUserLogin = async (req,res,next) => {
 
   }
 
-
+  // brisi i revies i orders
+  
   clearImage(user.imageUrl)
 
   try {
@@ -279,17 +271,7 @@ module.exports.deleteUserLogin = async (req,res,next) => {
 
 }
 
-// Napravicu poseban folder za ovu util funkciju kasnije
-const clearImage = (filePath, next) => { 
-  let imagePath = path.join(__dirname, '..', filePath);
-  fs.unlink(imagePath, (err) => {
-    if (err) {
-      const error = new HttpError('Something went wrong',500)
-      return next(error)
-    }
-    console.log('File deleted successfully');
-  });
-};
+
 
 
 

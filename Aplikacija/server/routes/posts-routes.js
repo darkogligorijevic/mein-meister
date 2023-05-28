@@ -18,7 +18,7 @@ router.post(
   fileUpload.single('imageUrl'),
   [
     check('title').trim().not().isEmpty(),
-    check('description').trim().not().isEmpty().isLength({ min: 5 }),
+    check('description').trim().not().isEmpty(),
     check('city').trim().not().isEmpty(),
     check('category').trim().not().isEmpty(),
     check('price').isNumeric()
@@ -32,7 +32,7 @@ router.patch('/update/:postId/worker/:workerId',
 fileUpload.single('imageUrl'),
 [
   check('title').trim().not().isEmpty(),
-    check('description').trim().not().isEmpty().isLength({ min: 5 }),
+    check('description').trim().not().isEmpty(),
     check('city').trim().not().isEmpty(),
     check('category').trim().not().isEmpty(),
     check('price').isNumeric()
