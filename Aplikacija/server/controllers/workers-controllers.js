@@ -7,20 +7,32 @@ module.exports.postWorkerCreate = async (req, res, next) => {
   const errors = validationResult(req);
   console.log(errors);
   if (!errors.isEmpty()) {
-    return next(new HttpError('Invalid inputs passed, please check your data.', 422));
+    return next(new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422));
   }
   
   const { phone } = req.body;
-  console.log(req.userId);
+
+  let user;
+  try {
+    user = await User.findById(req.userId);
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Korisnik ne postoji', 404);
+    return next(error);
+  }
 
   let existingWorker;
   try {
     existingWorker = await Worker.findOne({ userId: req.userId });
     if (existingWorker) {
-      return next(new HttpError('A worker is already created for this user', 422));
+      return next(new HttpError('Korisnik je već postao majstor', 422));
     }
   } catch (err) {
-    const error = new HttpError('Something went wrong, could not find worker', 500);
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
 
@@ -30,29 +42,17 @@ module.exports.postWorkerCreate = async (req, res, next) => {
     posts: []
   });
 
-  let user;
-  try {
-    user = await User.findById(req.userId);
-  } catch (err) {
-    const error = new HttpError('Something went wrong, could not find user', 500);
-    return next(error);
-  }
-
-  if (!user) {
-    const error = new HttpError('User not found for the given user ID', 404);
-    return next(error);
-  }
-
+  
   try {
     await newWorker.save();
     user.isMeister = true; // set the isMeister field of the user to true
     await user.save(); // save the updated user document to the database
   } catch (err) {
-    const error = new HttpError('Something went wrong, could not create worker', 500);
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
   
-  res.status(201).json({ message: 'You have successfully become a meister', workerId: newWorker._id.toString() });
+  res.status(201).json({ message: 'Uspešno ste postali majstor', workerId: newWorker._id.toString() });
 };
 
 
@@ -65,7 +65,7 @@ module.exports.getWorkerAll = async (req,res,next) => {
   try {
     workers = await Worker.find({}).populate('userId','-password')
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -81,7 +81,7 @@ module.exports.getWorkerById = async (req,res,next) => {
   try {
     worker = await Worker.findOne({_id:workerId}).populate('userId','-password')
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -97,12 +97,12 @@ module.exports.getWorkerByUserId = async (req, res, next) => {
   try {
     worker = await Worker.findOne({ userId }).populate('userId', '-password');
   } catch (err) {
-    const error = new HttpError('Something went wrong', 500);
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
 
   if (!worker) {
-    const error = new HttpError('Worker not found', 404);
+    const error = new HttpError('Majstor nije pronađen', 404);
     return next(error);
   }
 

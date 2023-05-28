@@ -19,7 +19,9 @@ router.post(
   [
     check('title').trim().not().isEmpty(),
     check('description').trim().not().isEmpty().isLength({ min: 5 }),
-    check('city').trim().not().isEmpty() 
+    check('city').trim().not().isEmpty(),
+    check('category').trim().not().isEmpty(),
+    check('price').isNumeric()
   ],
   postsControllers.postCreate
 );
@@ -29,12 +31,11 @@ router.delete('/delete/:postId/worker/:workerId',postsControllers.deletePostById
 router.patch('/update/:postId/worker/:workerId',
 fileUpload.single('imageUrl'),
 [
-check('title').trim().not()
-.isEmpty(),
-check('description').trim().not()
-.isEmpty().isLength({min:5}),
-check('city').trim().not()
-.isEmpty()
+  check('title').trim().not().isEmpty(),
+    check('description').trim().not().isEmpty().isLength({ min: 5 }),
+    check('city').trim().not().isEmpty(),
+    check('category').trim().not().isEmpty(),
+    check('price').isNumeric()
 ],postsControllers.patchPostById)
 
 

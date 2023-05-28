@@ -12,7 +12,7 @@ fileUpload.single('imageUrl'),
   check('firstName').trim().not().isEmpty().isLength({max:25}),
   check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('password').isLength({min:7})
+  check('password').trim().isLength({min:7})
 ],
 authControllers.postUserRegister);
 
@@ -24,11 +24,10 @@ router.use(checkAuth);
 router.patch('/update',
 fileUpload.single('imageUrl'),
 [
-  // ovo ime, prezime, email, sifra samo treba da se promeni kao gore, to sam zaboravio
   check('firstName').trim().not().isEmpty().isLength({max:25}),
   check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('password').isLength({min:7})
+  check('password').trim().isLength({min:7})
 ],
 authControllers.updateUserLogIn);
 

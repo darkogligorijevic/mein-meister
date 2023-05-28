@@ -17,46 +17,42 @@ const HttpError = require('../models/HttpError');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.postUserRegister = async (req,res,next)=>{
-  console.log(req.headers)
-  console.log(req.body)
-  console.log(req.file)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
+      new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
   const {firstName, lastName, email, password} = req.body;
   let existingUser
   try {
-  existingUser = await User.findOne({email:email})
+  existingUser = await User.findOne({email:email});
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500);
     return next(error);
   }
   if(existingUser) {
-    const error = new HttpError('Such a user already exists, please try to log in',422)
-    return next(error)
+    const error = new HttpError('Korisnik sa takvim e-mail-om već postoji, probajte drugi, ili se ulogujte',422)
+    return next(error);
   }
 
   let hashedPassword;
   try {
   hashedPassword = await bcrypt.hash(password,12);
   } catch(err) {
-    const error = new HttpError('Something went wrong')
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error);
   }
 
 
   const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
 
-  console.log(typeof imageUrl)
 
   const newUser = new User({
-    firstName: firstName,
-    lastName: lastName,
-    imageUrl: imageUrl,
-    email: email,
+    firstName,
+    lastName,
+    imageUrl,
+    email,
     password:hashedPassword
   })
 
@@ -64,13 +60,13 @@ module.exports.postUserRegister = async (req,res,next)=>{
   try {
   await newUser.save()
   } catch(err) {
-  const error = new HttpError('Something went wrong, please try again later',500)
+  const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
   return next(error);
 }
 
   
 
-res.json({message:'Successfully created user',userId:newUser._id,email:newUser.email})
+res.status(201).json({message:'Korisnik je uspešno kreiran',userId:newUser._id,email:newUser.email})
 
 }
 
@@ -82,12 +78,12 @@ module.exports.postUserLogin = async (req,res,next)=>{
   try {
     user = await User.findOne({email:email})
   } catch(err) {
-    const error = new HttpError('Loggin in failed, please try again later',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error);
   }
 
   if(!user) {
-    const error = new HttpError('There is no such a user, please signup first',401)
+    const error = new HttpError('Korisnik sa tim e-mail-om ne postoji, molimo da se registrujete',400)
     return next(error);
   }
 
@@ -95,13 +91,13 @@ module.exports.postUserLogin = async (req,res,next)=>{
   try {
    isValid = await bcrypt.compare(password,user.password)
   } catch(err) {
-    const error = new HttpError('Something went wrong')
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error);
   }
 
   if(!isValid) {
     const error = new HttpError(
-      'Invalid credentials, could not log you in',
+      'Invalidni podaci, ne možemo da vas ulogujemo',
       403
     );
     return next(error);
@@ -109,10 +105,15 @@ module.exports.postUserLogin = async (req,res,next)=>{
 
   let token;
   try {
-    token = jwt.sign({userId:user._id,email:user.email},process.env.SECRET_JWT)
+    token = jwt.sign({
+      userId:user._id,email:user.email
+    },
+    process.env.SECRET_JWT,
+    { expiresIn: '1h' }
+    )
   } catch(err) {
     const error = new HttpError(
-      'Loging in failed, please try again later.',500);
+      'Neuspešno logovanje, molimo probajte kasnije',500);
     return next(error);
   }
 
@@ -120,11 +121,11 @@ module.exports.postUserLogin = async (req,res,next)=>{
   try {
     await User.findOneAndUpdate({_id: req.userId, isMeister: false}, {isMeister: true});
   } catch (err) {
-    const error = new HttpError('Something went wrong, could not update user', 500);
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
 
-  res.status(200).json({message:'Successfully logged in',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister})
+  res.status(200).json({message:'Uspešno ste se ulogovali',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister})
 
 }
 
@@ -134,7 +135,7 @@ module.exports.updateUserLogIn = async (req,res,next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
+      new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
   const {firstName,lastName,email,password} = req.body;
@@ -143,19 +144,19 @@ module.exports.updateUserLogIn = async (req,res,next) => {
     imageUrl = req.file.path.replace(/\\/g, "/")
   }
   if(!imageUrl) {
-    const error = new HttpError('No file picked',422)
+    const error = new HttpError('File nije izabran',422)
      return next(error)
   }
   let user;
   try {
     user = await User.findOne({_id:req.userId})
   } catch(err) {
-    const error = new HttpError('Updating failed, please try again later',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error);
   }
 
   if(!user) {
-    const error = new HttpError('There is no such a user, please signup first',401)
+    const error = new HttpError('Takav korisnik ne postoji',401)
     return next(error);
   }
 
@@ -164,30 +165,24 @@ module.exports.updateUserLogIn = async (req,res,next) => {
   try {
   isItSame = await bcrypt.compare(password,user.password);
   } catch(err) {
-    const error = new HttpError('Something went wrong')
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
     return next(error);
   }
 
-  console.log(isItSame)
 
   let hashedPassword;
   if(!isItSame) {
     try {
     hashedPassword = await bcrypt.hash(password,12);
     } catch(err) {
-      const error = new HttpError('Something went wrong')
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
       return next(error);
     }
   } 
   
 
-
-console.log(hashedPassword);
-
 if (imageUrl !== user.imageUrl) {
-  // fs.unlink(imageUrl, (err) => {
-  //   console.log(err)
-  // })
+
   clearImage(user.imageUrl)
 }
 
@@ -202,11 +197,11 @@ if (imageUrl !== user.imageUrl) {
   try {
     await User.findOneAndUpdate({_id:user._id},updateUser);
     } catch(err) {
-      const error = new HttpError('Something went wrong',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error)
     }
 
-    res.status(202).json({message:"Succesffully updated user"});
+    res.status(202).json({message:"Korisnik je uspešno promenio podatke"});
 };
 
 
@@ -217,27 +212,26 @@ module.exports.deleteUserLogin = async (req,res,next) => {
   try {
     user = await User.findOne({_id:req.userId})
   } catch(err) {
-    const error = new HttpError('Updating failed, please try again later',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error);
   }
 
   if(!user) {
-    const error = new HttpError('There is no such a user, please signup first',401)
+    const error = new HttpError('Takav korisnik ne postoji',401)
     return next(error);
   }
 
   if(user.isMeister) {
-    console.log('Jeste');
     let worker;
     try {
       worker = await Worker.findOne({userId:user._id});
     } catch(err) {
-      const error = new HttpError('Something went wrong',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error);
     }
 
     if(!worker) {
-      const error = new HttpError("There is no such a worker",404)
+      const error = new HttpError("Takav majstor ne postoji",404)
       return next(error)
     }
 
@@ -245,7 +239,7 @@ module.exports.deleteUserLogin = async (req,res,next) => {
     try {
       posts = await Post.find({workerId:worker._id})
     } catch(err) {
-      const error = new HttpError('Findig posts failed, please try again later',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error);
     }
 
@@ -257,38 +251,30 @@ module.exports.deleteUserLogin = async (req,res,next) => {
     try {
       await Post.deleteMany({workerId:worker._id})
     } catch(err) {
-      const error = new HttpError('Something went wrong',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error);
     }
-
-      // fetch sve postove od workera
-      // prodji array kroz njih i izbrise sve slike
-      // izbrisi sve postove
-      // izacice iz if i izbrisace majstora 
-      // Ako izbrisem workera, moram i sve psotove koje je on napravio
-
 
     try {
       await Worker.findOneAndDelete({_id:worker._id});
     } catch(err) {
-      const error = new HttpError('Something went wrong',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error)
     }
 
   }
 
-  console.log(typeof req.userId, typeof user._id);
 
   clearImage(user.imageUrl)
 
   try {
     await User.findByIdAndDelete({_id:user._id})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
-  res.status(200).json({message:"Successfully deleted user"})
+  res.status(200).json({message:"Korisnik je izbrisan"})
 
 
 }

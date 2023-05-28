@@ -10,15 +10,13 @@ const HttpError = require('../models/HttpError')
 
 module.exports.postCreate = async (req,res,next)=>{
   const errors = validationResult(req);
-  console.log(errors);
-  console.log('ovde');
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
+      new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
   if (!req.file) {
-    const error = new HttpError('No image provided',422)
+    const error = new HttpError('File nije izabran',422)
     return next(error)
   }
   const {workerId} = req.params
@@ -28,12 +26,12 @@ module.exports.postCreate = async (req,res,next)=>{
   try {
     worker = await Worker.findOne({_id:workerId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
   if(!worker) {
-    const error = new HttpError("There is no such a worker",404)
+    const error = new HttpError("Takav majstor ne postoji",404)
     return next(error)
   }
 
@@ -50,13 +48,12 @@ module.exports.postCreate = async (req,res,next)=>{
   })
 
 
-  console.log(newPost);
   let post;
   try {
     post = await newPost.save()
     console.log(post)
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -65,11 +62,11 @@ module.exports.postCreate = async (req,res,next)=>{
   try {
     await worker.save()
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
-  res.status(201).json({message:"Succesfully added a post"})
+  res.status(201).json({message:"Uspešno ste kreirali post"})
 
 
 }
@@ -98,7 +95,7 @@ module.exports.getPostAll = async (req, res, next) => {
       },
     });
   } catch (err) {
-    const error = new HttpError('Something went wrong', 500);
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
 
@@ -116,9 +113,9 @@ module.exports.getPostById = async (req,res,next) => {
       populate: {
         path: 'userId'
       }
-    }) //nested populate
+    }) 
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -154,12 +151,12 @@ module.exports.deletePostById = async (req,res,next) => {
   try {
     post = await Post.findOne({_id:postId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
      return next(error)
   }
 
   if(!post) {
-    const error = new HttpError('There is no such a post',404)
+    const error = new HttpError('Nije pronađen takav post',404)
      return next(error)
   }
 
@@ -169,42 +166,37 @@ module.exports.deletePostById = async (req,res,next) => {
   try {
     worker = await Worker.findOne({_id:workerId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
      return next(error)
   }
-  // console.log(worker)
-  // console.log(workerId, worker._id)
-  // console.log(workerId,worker._id.toString())
-  // console.log(workerId !== worker._id.toString())
+
 
   if(!worker || workerId !== post.workerId.toString()) {
-    const error = new HttpError('There is no such a worker, or you didnt create that post',404)
+    const error = new HttpError('Ne postoji takav majstor, ili ne možete da izbrišete post koji niste napravili',404)
      return next(error)
   }
-  // console.log(worker.posts, postId) debug
+
   worker.posts = worker.posts.filter((idPost) => idPost.toString() !== postId)
-  // console.log(worker.posts, postId) debug
+
 
   try {
     await worker.save()
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
-  // fs.unlink(post.imageUrl, (err) => {
-  //   console.log(err)
-  // })
+
   clearImage(post.imageUrl)
 
   try {
     await Post.findByIdAndDelete({_id:postId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
-  res.json({message:"Successfully deleted post"})
+  res.status(200).json({message:"Post je uspešno izbrisan"})
 
 }
 
@@ -214,7 +206,7 @@ module.exports.patchPostById = async (req,res,next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
+      new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
   const {postId, workerId} = req.params;
@@ -224,7 +216,7 @@ module.exports.patchPostById = async (req,res,next) => {
     imageUrl = req.file.path.replace(/\\/g, "/")
   }
   if(!imageUrl) {
-    const error = new HttpError('No file picked',422)
+    const error = new HttpError('File nije izabran',422)
      return next(error)
   }
   
@@ -233,12 +225,12 @@ module.exports.patchPostById = async (req,res,next) => {
   try {
     post = await Post.findOne({_id:postId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
      return next(error)
   }
 
   if(!post) {
-    const error = new HttpError('There is no such a post',404)
+    const error = new HttpError('Ne postoji takav post',404)
      return next(error)
   }
 
@@ -246,21 +238,18 @@ module.exports.patchPostById = async (req,res,next) => {
   try {
     worker = await Worker.findOne({_id:workerId})
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
      return next(error)
   }
 
   if(!worker || workerId !== post.workerId.toString()) {
-    const error = new HttpError('There is no such a worker, or you didnt create that post',404)
+    const error = new HttpError('Ne postoji takav majstor, ili ne možete da izbrišete post koji niste napravili',404)
      return next(error)
   }
 
-  console.log(imageUrl, post.imageUrl)
-  console.log(imageUrl !== post.imageUrl)
+  
   if (imageUrl !== post.imageUrl) {
-    // fs.unlink(imageUrl, (err) => {
-    //   console.log(err)
-    // })
+   
     clearImage(post.imageUrl)
   }
 
@@ -278,12 +267,12 @@ module.exports.patchPostById = async (req,res,next) => {
   try {
     await Post.findOneAndUpdate({_id:postId},updatePost);
     } catch(err) {
-      const error = new HttpError('Something went wrong',500)
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error)
     }
 
 
-    res.status(202).json({message:"Succesffully updated post"})
+    res.status(202).json({message:"Uspešno ste izmenili post"})
 
 
 }
