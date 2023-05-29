@@ -7,7 +7,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const socketIO = require('socket.io');
 
 const HttpError = require('./models/HttpError');
 const authRoutes = require('./routes/auth-routes');

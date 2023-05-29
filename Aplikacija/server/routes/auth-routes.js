@@ -27,9 +27,16 @@ fileUpload.single('imageUrl'),
   check('firstName').trim().not().isEmpty().isLength({max:25}),
   check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('password').trim().isLength({min:7})
 ],
 authControllers.updateUserLogIn);
+
+router.patch('/update/password',
+[
+  check('oldPassword').trim().isLength({min:7}),
+  check('newPassword').trim().isLength({min:7}),
+
+],
+authControllers.updateUserPassword)
 
 router.delete('/delete',
   authControllers.deleteUserLogin
