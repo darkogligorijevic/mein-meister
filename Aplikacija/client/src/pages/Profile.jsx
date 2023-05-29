@@ -113,7 +113,7 @@ const Profile = () => {
           </div>
         ))}
         <div className='mt-16 flex flex-row gap-4'>
-          <Link className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>Azuriraj Profil</Link>
+          <Link to={`/register?edit=${currentUser.userId}`} state={currentUser} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>Azuriraj Profil</Link>
           <Link onClick={handleDeleteUser} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
             Obrisi Profil
           </Link>

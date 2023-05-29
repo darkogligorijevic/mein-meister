@@ -122,60 +122,60 @@ module.exports.postUserLogin = async (req,res,next)=>{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.updateUserLogIn = async (req,res,next) => {
+module.exports.updateUserLogIn = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
       new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
-  const {firstName,lastName,email,password} = req.body;
-  let {imageUrl} = req.body;
-  if(req.file) {
-    imageUrl = req.file.path.replace(/\\/g, "/")
+
+  const { firstName, lastName, email, password } = req.body;
+  let { imageUrl } = req.body;
+
+  if (req.file) {
+    imageUrl = req.file.path.replace(/\\/g, "/");
   }
-  if(!imageUrl) {
-    const error = new HttpError('File nije izabran',422)
-     return next(error)
+
+  if (!imageUrl) {
+    const error = new HttpError('File nije izabran', 422);
+    return next(error);
   }
+
   let user;
   try {
-    user = await User.findOne({_id:req.userId})
-  } catch(err) {
-    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    user = await User.findOne({ _id: req.userId });
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
     return next(error);
   }
 
-  if(!user) {
-    const error = new HttpError('Takav korisnik ne postoji',401)
+  if (!user) {
+    const error = new HttpError('Takav korisnik ne postoji', 401);
     return next(error);
   }
-
 
   let isItSame;
   try {
-  isItSame = await bcrypt.compare(password,user.password);
-  } catch(err) {
-    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
+    isItSame = await bcrypt.compare(password, user.password);
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije');
     return next(error);
   }
 
-
   let hashedPassword;
-  if(!isItSame) {
+  if (!isItSame) {
     try {
-    hashedPassword = await bcrypt.hash(password,12);
-    } catch(err) {
-      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
+      hashedPassword = await bcrypt.hash(password, 12);
+    } catch (err) {
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije');
       return next(error);
     }
-  } 
-  
+  }
 
-if (imageUrl !== user.imageUrl) {
-
-  clearImage(user.imageUrl)
-}
+  if (imageUrl !== user.imageUrl) {
+    clearImage(user.imageUrl);
+  }
 
   const updateUser = {
     firstName: firstName || user.firstName,
@@ -186,14 +186,23 @@ if (imageUrl !== user.imageUrl) {
   };
 
   try {
-    await User.findOneAndUpdate({_id:user._id},updateUser);
-    } catch(err) {
-      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
-      return next(error)
-    }
+    await User.findOneAndUpdate({ _id: user._id }, updateUser);
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
+  }
 
-    res.status(202).json({message:"Korisnik je uspešno promenio podatke"});
+  const updatedUser = {
+    ...user.toObject(),
+    ...updateUser
+  };
+
+  res.status(202).json({
+    message: "Korisnik je uspešno promenio podatke",
+    user: updatedUser
+  });
 };
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

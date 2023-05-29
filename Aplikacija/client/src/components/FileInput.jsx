@@ -2,7 +2,7 @@ import { useDropzone } from 'react-dropzone';
 import { useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const FileInput = ({ name, onChange }) => {
+const FileInput = ({ name, onChange, value }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const onDrop = useCallback(
     (acceptedFiles) => {

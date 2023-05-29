@@ -109,7 +109,7 @@ const CreatePost = () => {
                 <div className="grid grid-cols-1 gap-6 mt-4">
                     <div>
                         <label className="text-gray-500" for="title">Naslov</label>
-                        <input value={inputs.title} onChange={handleChange} name="title" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  {/* this is working as well as other with input type="text" and type="number" because of value */}
+                        <input value={inputs.title} onChange={handleChange} name="title" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  
                     </div>
                     <div>
                         <label className="flex mb-2 text-gray-500 dark:text-gray-200" for="category">Delatnost</label>
