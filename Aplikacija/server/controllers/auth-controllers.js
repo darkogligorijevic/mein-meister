@@ -6,6 +6,8 @@ const {validationResult} = require('express-validator')
 const User = require('../models/User');
 const Worker = require('../models/Worker');
 const Post = require('../models/Post');
+const Review = require('../models/Reviews');
+const Order = require('../models/Order');
 const clearImage = require('../util/clear-image');
 const HttpError = require('../models/HttpError');
 
@@ -129,12 +131,19 @@ module.exports.updateUserLogIn = async (req, res, next) => {
       new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
+<<<<<<< HEAD
 
   const { firstName, lastName, email, password } = req.body;
   let { imageUrl } = req.body;
 
   if (req.file) {
     imageUrl = req.file.path.replace(/\\/g, "/");
+=======
+  const {firstName,lastName,email} = req.body;
+  let {imageUrl} = req.body;
+  if(req.file) {
+    imageUrl = req.file.path.replace(/\\/g, "/")
+>>>>>>> dcf31184d10c6de0d6ecf5806de1330f235111d2
   }
 
   if (!imageUrl) {
@@ -155,6 +164,7 @@ module.exports.updateUserLogIn = async (req, res, next) => {
     return next(error);
   }
 
+<<<<<<< HEAD
   let isItSame;
   try {
     isItSame = await bcrypt.compare(password, user.password);
@@ -176,13 +186,20 @@ module.exports.updateUserLogIn = async (req, res, next) => {
   if (imageUrl !== user.imageUrl) {
     clearImage(user.imageUrl);
   }
+=======
+
+  
+if (imageUrl !== user.imageUrl) {
+
+  clearImage(user.imageUrl)
+}
+>>>>>>> dcf31184d10c6de0d6ecf5806de1330f235111d2
 
   const updateUser = {
     firstName: firstName || user.firstName,
     lastName: lastName || user.lastName,
     email: email || user.email,
     imageUrl: imageUrl,
-    password: hashedPassword || user.password
   };
 
   try {
@@ -206,6 +223,66 @@ module.exports.updateUserLogIn = async (req, res, next) => {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+module.exports.updateUserPassword = async (req,res,next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    return next(
+      new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
+    );
+  }
+  const {oldPassword, newPassword} = req.body
+
+  let user;
+  try {
+    user = await User.findOne({_id:req.userId})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error);
+  }
+
+  if(!user) {
+    const error = new HttpError('Takav korisnik ne postoji',401)
+    return next(error);
+  }
+
+  let isItSame;
+  try {
+  isItSame = await bcrypt.compare(oldPassword,user.password);
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
+    return next(error);
+  }
+
+
+  let hashedPassword;
+  if(isItSame) {
+    try {
+    hashedPassword = await bcrypt.hash(newPassword,12);
+    } catch(err) {
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije')
+      return next(error);
+    }
+  } else {
+    return next(new HttpError('Uneli ste pogrešnu sifru'))
+  }
+
+  user.password = hashedPassword;
+
+
+ try {
+    await user.save();
+    } catch(err) {
+      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+      return next(error)
+    }
+
+    res.status(202).json({message:"Korisnik je uspešno promenio sifru"});
+
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.deleteUserLogin = async (req,res,next) => {
   let user;
@@ -263,6 +340,22 @@ module.exports.deleteUserLogin = async (req,res,next) => {
     }
 
   }
+
+  try {
+    await Order.deleteMany({userId:user._id})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+  try {
+    await Review.deleteMany({userId:user._id})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+
 
   // brisi i revies i orders
   
