@@ -6,6 +6,8 @@ const {validationResult} = require('express-validator')
 const User = require('../models/User');
 const Worker = require('../models/Worker');
 const Post = require('../models/Post');
+const Review = require('../models/Reviews');
+const Order = require('../models/Order');
 const clearImage = require('../util/clear-image');
 const HttpError = require('../models/HttpError');
 
@@ -254,6 +256,22 @@ module.exports.deleteUserLogin = async (req,res,next) => {
     }
 
   }
+
+  try {
+    await Order.deleteMany({userId:user._id})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+  try {
+    await Review.deleteMany({userId:user._id})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+
 
   // brisi i revies i orders
   
