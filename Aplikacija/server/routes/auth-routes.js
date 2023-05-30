@@ -33,8 +33,7 @@ authControllers.updateUserLogIn);
 router.patch('/update/password',
 [
   check('oldPassword').trim().isLength({min:7}),
-  check('newPassword').trim().isLength({min:7}),
-
+  check('newPassword').trim().isLength({min:7})
 ],
 authControllers.updateUserPassword)
 

@@ -11,9 +11,7 @@ const Orders = () => {
                     <h1 className="text-3xl font-black md:w-1/2 md:text-4xl lg:text-5xl lg:w-2/3 2xl:w-1/2 2xl:text-6xl">Obavestenja</h1>
                 </div>
                 <div>
-                    <Order 
-                        
-                    />
+                    <Order />
                 </div>
             </div>
         </div>

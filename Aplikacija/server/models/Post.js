@@ -10,7 +10,9 @@ const postSchema = new mongoose.Schema({
    imageUrl:{type:String,required:true},
    city:{type:String,required:true},
    category: {type:String, required:true},
-   price: {type:Number, required:true}
+   price: {type:Number, required:true},
+   hireInfo: {type:String},
+   timeDuration: {type:String, required: true}
 },{ timestamps: true })
 
 module.exports = mongoose.model('Post',postSchema);

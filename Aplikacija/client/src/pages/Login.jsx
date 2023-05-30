@@ -7,7 +7,7 @@ const Login = () => {
 
   const [inputs, setInputs] = useState({
     email: "",
-    password: ""
+    password: "",
   })
 
   const [err, setError] = useState(null)

@@ -16,6 +16,7 @@ import Profile from './pages/Profile'
 import CreateOrder from './pages/CreateOrder'
 import Orders from './pages/Orders'
 import SingleOrder from './pages/SingleOrder'
+import ChangePassword from './pages/ChangePassword'
 
 const Layout = () => {
   return (
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/order/:id",
         element: <SingleOrder />
+      },
+      {
+        path: "/change-password",
+        element: <ChangePassword />
       }
     ]
   },

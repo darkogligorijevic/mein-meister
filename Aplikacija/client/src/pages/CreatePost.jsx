@@ -17,7 +17,9 @@ const CreatePost = () => {
     city: state?.city || '',
     category: state?.category || '',
     price: state?.price || '',
-    imageUrl: state?.imageUrl || null,
+    hireInfo: state?.hireInfo || '',
+    timeDuration: state?.timeDuration || '',
+    imageUrl: state?.imageUrl || null
   });
 
   const params = useParams()
@@ -58,6 +60,8 @@ const CreatePost = () => {
     formData.append('category', inputs.category);
     formData.append('price', inputs.price);
     formData.append('imageUrl', inputs.imageUrl);
+    formData.append('hireInfo', inputs.hireInfo);
+    formData.append('timeDuration', inputs.timeDuration);
 
     const token = localStorage.getItem("token")
 
@@ -104,7 +108,7 @@ const CreatePost = () => {
     <div className="py-[128px]">
         <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
           <div className='p-12 shadow-lg'>
-            <h1 className="text-2xl font-black text-black">Dodajte uslugu</h1>
+            <h1 className="text-2xl font-black text-black">{ !state ? 'Dodajte uslugu' : 'Azurirajte uslugu'}</h1>
             <form>
                 <div className="grid grid-cols-1 gap-6 mt-4">
                     <div>
@@ -120,19 +124,27 @@ const CreatePost = () => {
                         <SearchBar onCitySelect={handleCitySelect} /> 
                     </div>
                     <div>
-                        <label className="text-gray-500 dark:text-gray-200" for="price">Cena</label>
+                        <label className="text-gray-500 dark:text-gray-200" for="price">Cena (RSD)</label>
                         <input value={inputs.price} onChange={handleChange} name="price" type="number" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />
+                    </div>
+                    <div>
+                        <label className="text-gray-500" for="hireInfo">Ostavite informacije korisniku pre nego da Vas zaposle</label>
+                        <input value={inputs.hireInfo} onChange={handleChange} name="hireInfo" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  
+                    </div>
+                    <div>
+                        <label className="text-gray-500" for="timeDuration">Koliko Vam je vremena potrebno za ovaj posao</label>
+                        <input value={inputs.timeDuration} onChange={handleChange} name="timeDuration" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  
                     </div>
                     <div>
                         <label className="text-gray-500 dark:text-gray-200" for="description">Deskripcija</label>
                         <ReactQuill onChange={handleDescriptionChange} value={inputs.description} name="description" className='block mt-2 mb-12 h-36'/>
                     </div>
-                    <FileInput name='imageUrl' onChange={handleFileChange} />
+                    <FileInput name='imageUrl' onChange={handleFileChange}/>
                     
                 </div>
 
                 <div className="flex justify-start mt-6">
-                    <PrimaryButton content='Napravite uslugu' onClick={handleSubmit} primaryColor="black" secondaryColor="white" />
+                    <PrimaryButton content={ !state ? 'Napravite uslugu' : 'Promeni & Sacuvaj'} onClick={handleSubmit} primaryColor="black" secondaryColor="white" />
                 </div>
                 {err && <span className='text-red-500 block text-center bg-gray-200 py-4 mt-3'>{err}</span>}
             </form>

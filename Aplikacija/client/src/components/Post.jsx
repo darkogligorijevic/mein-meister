@@ -4,6 +4,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
+import StarIcon from '@mui/icons-material/Star';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 dayjs.extend(relativeTime);
 
@@ -15,6 +17,8 @@ const Post = () => {
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
   const [price,  setPrice] = useState('')
+  const [hireInfo, setHireInfo] = useState('');
+  const [timeDuration, setTimeDuration] = useState('')
 
   const params = useParams();
   const navigate = useNavigate()
@@ -50,6 +54,8 @@ const Post = () => {
       setCity(response.data.city);
       setCategory(response.data.category)
       setPrice(response.data.price)
+      setHireInfo(response.data.hireInfo)
+      setTimeDuration(response.data.timeDuration)
     };
 
     const fetchReviews = async () => {
@@ -118,10 +124,19 @@ const Post = () => {
                 </div>
               </div>
               <div>
-                <p className='font-thin'>
-                  {averageStars}<span className='text-orange-500'>/5</span>
-                </p>
-              </div>
+              {averageStars > 0 ? (
+                <div className='flex items-center'>
+                  <div className='text-orange-500 items-center'>
+                    <StarIcon fontSize='16px'/>
+                  </div>
+                  <p className='font-bold'>
+                    {averageStars}/5
+                  </p>
+                </div>
+              ) : (
+                <p className='font-thin'>N/A</p>
+              )}
+            </div>
             </div>
             <div>
             {currentUser && currentUser.userId === userId && (
@@ -136,7 +151,7 @@ const Post = () => {
             )}
           </div>
             <div className='flex flex-col gap-4 lg:gap-8'>
-              <div className='px-4 py-2 mt-5 bg-gray-600 self-start text-white font-bold'>{category}</div>
+              <div className='px-4 py-2 mt-5 bg-orange-500 self-start text-white font-bold'>{category}</div>
               <h1 className='text-2xl font-black lg:text-4xl'>{title}</h1>
               <div dangerouslySetInnerHTML={{__html: description}} />
             </div>
@@ -161,14 +176,24 @@ const Post = () => {
               </div> : <p className='mt-5'>Niko jos nije ostavio recenziju {':('}</p>}
             </div>
           </div>
-          <div className='flex flex-col gap-4 p-10 lg:sticky lg:border lg:border-gray-200 lg:shadow-lg lg:top-0 lg:h-full lg:w-1/2 lg:mx-auto text-center'>
-            <h2 className='text-4xl'>CENOVNIK</h2>
-            { price > 0 ? <p className='text-lg'>
-              Ovaj majstor naplacuje <span className='font-bold'>{price}din</span> po satu
-            </p> : <p className='text-lg'>
-              Cena po dogovoru!
-            </p>}
-            { currentUser && currentUser.userId !== userId && ( <Link to={`/create-order/${params.id}`} className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-center font-black'>
+          <div className='flex flex-col gap-8 p-10 lg:sticky border border-gray-200 rounded-3xl shadow-lg lg:top-0 lg:h-full lg:w-1/3 lg:mx-auto text-center'>
+            <div className='flex items-center justify-between'>
+              <h2 className='text-xl'>Cena</h2>
+              { price > 0 ? <p className='text-lg'>
+              <p className='font-bold text-4xl'>RSD{price}</p>
+              </p> : <p className='text-lg'>
+              Po dogovoru
+              </p>}
+            </div>
+            <p className='text-start font-thin'>
+              {hireInfo}
+            </p>
+            <div className='flex items-center gap-2'>
+              <AccessTimeIcon />
+              <p>{timeDuration}</p>
+            </div>
+            
+            { currentUser && currentUser.userId !== userId && ( <Link to={`/create-order/${params.id}`} className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300  font-black'>
               Zaposli
             </Link>)}
           </div>

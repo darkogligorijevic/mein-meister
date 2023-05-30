@@ -63,6 +63,9 @@ const Order = () => {
   
     return `${formattedDate} u ${formattedTime}h.`;
   };  
+  
+  const currentDate = new Date()
+  console.log(currentDate)
 
   return (
     <div className='flex flex-col gap-16'>
@@ -95,6 +98,7 @@ const Order = () => {
                   <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> jos nije prihvatio/la Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
                 )}
               </div>
+              
             )}
           </div>
           <button className='text-gray-400'>x</button>

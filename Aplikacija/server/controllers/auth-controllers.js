@@ -131,19 +131,12 @@ module.exports.updateUserLogIn = async (req, res, next) => {
       new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
-<<<<<<< HEAD
 
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email } = req.body;
   let { imageUrl } = req.body;
 
   if (req.file) {
     imageUrl = req.file.path.replace(/\\/g, "/");
-=======
-  const {firstName,lastName,email} = req.body;
-  let {imageUrl} = req.body;
-  if(req.file) {
-    imageUrl = req.file.path.replace(/\\/g, "/")
->>>>>>> dcf31184d10c6de0d6ecf5806de1330f235111d2
   }
 
   if (!imageUrl) {
@@ -164,42 +157,15 @@ module.exports.updateUserLogIn = async (req, res, next) => {
     return next(error);
   }
 
-<<<<<<< HEAD
-  let isItSame;
-  try {
-    isItSame = await bcrypt.compare(password, user.password);
-  } catch (err) {
-    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije');
-    return next(error);
-  }
-
-  let hashedPassword;
-  if (!isItSame) {
-    try {
-      hashedPassword = await bcrypt.hash(password, 12);
-    } catch (err) {
-      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije');
-      return next(error);
-    }
-  }
-
   if (imageUrl !== user.imageUrl) {
     clearImage(user.imageUrl);
   }
-=======
-
-  
-if (imageUrl !== user.imageUrl) {
-
-  clearImage(user.imageUrl)
-}
->>>>>>> dcf31184d10c6de0d6ecf5806de1330f235111d2
 
   const updateUser = {
     firstName: firstName || user.firstName,
     lastName: lastName || user.lastName,
     email: email || user.email,
-    imageUrl: imageUrl,
+    imageUrl: imageUrl
   };
 
   try {
@@ -371,9 +337,4 @@ module.exports.deleteUserLogin = async (req,res,next) => {
   res.status(200).json({message:"Korisnik je izbrisan"})
 
 
-}
-
-
-
-
-
+  }

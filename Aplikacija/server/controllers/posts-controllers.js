@@ -20,7 +20,7 @@ module.exports.postCreate = async (req,res,next)=>{
     return next(error)
   }
   const {workerId} = req.params
-  const {title, description, city, category, price} = req.body
+  const {title, description, city, category, price, hireInfo, timeDuration} = req.body
 
   let worker;
   try {
@@ -44,6 +44,8 @@ module.exports.postCreate = async (req,res,next)=>{
     city,
     category,
     price,
+    hireInfo,
+    timeDuration,
     imageUrl: imageUrl 
   })
 
@@ -210,7 +212,7 @@ module.exports.patchPostById = async (req,res,next) => {
     );
   }
   const {postId, workerId} = req.params;
-  const {title, description, city, category, price} = req.body;
+  const {title, description, city, category, price, hireInfo, timeDuration} = req.body;
   let {imageUrl} = req.body;
   if(req.file) {
     imageUrl = req.file.path.replace(/\\/g, "/")
@@ -261,7 +263,9 @@ module.exports.patchPostById = async (req,res,next) => {
     description: description || post.description,
     city:city || post.city,
     category:category || post.category,
-    price: price || post.price
+    price: price || post.price,
+    hireInfo: hireInfo || post.hireInfo,
+    timeDuration: timeDuration || post.timeDuration
   }
 
   try {

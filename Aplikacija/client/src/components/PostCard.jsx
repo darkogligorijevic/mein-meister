@@ -4,6 +4,7 @@ import TruncatedText from './TruncatedText';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PrimaryButton from './PrimaryButton';
+import StarIcon from '@mui/icons-material/Star';
 
 const PostCard = ({
   id,
@@ -46,12 +47,16 @@ const PostCard = ({
               <p className='font-semibold'>{city}</p>
             </div>
           </div>
+          
           {averageStar ? (
-            <p>
-              {averageStar} / <span className='text-orange-500'>5</span>
-            </p>
+            <div className='text-thin flex items-center gap-1'>
+              <StarIcon fontSize='16px' />
+              <span>{averageStar}</span>
+            </div>
           ) : (
-            <p>N/A</p>
+            <p>
+              N/A
+            </p>
           )}
         </div>
         <div className='flex flex-col gap-2'>
@@ -70,7 +75,7 @@ const PostCard = ({
           />
         </div>
       </div>
-      <div className='absolute top-0 left-0 px-4 py-2 bg-gray-900 font-bold text-white'>
+      <div className='absolute top-0 left-0 px-4 py-2 bg-orange-500 font-black text-white'>
         {category}
       </div>
     </div>

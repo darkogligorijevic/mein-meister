@@ -37,7 +37,6 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // Remove the deleted post from the state
       setPosts(posts.filter((post) => post._id !== postId));
     } catch (error) {
       console.error(error);
@@ -116,6 +115,9 @@ const Profile = () => {
           <Link to={`/register?edit=${currentUser.userId}`} state={currentUser} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>Azuriraj Profil</Link>
           <Link onClick={handleDeleteUser} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
             Obrisi Profil
+          </Link>
+          <Link to={`/change-password`} state={currentUser} className='bg-indigo-500 px-4 py-2 text-white font-bold cursor-pointer'>
+            Promenite lozinku
           </Link>
         </div>
       </div>
