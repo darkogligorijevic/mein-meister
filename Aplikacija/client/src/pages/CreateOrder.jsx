@@ -5,6 +5,8 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import { DateTimePicker } from 'react-rainbow-components';
 import { DateTime } from 'luxon';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateOrder = () => {
   const [inputs, setInputs] = useState({
@@ -78,7 +80,7 @@ const CreateOrder = () => {
         config
       );
 
-      console.log(response);
+      toast.success(response.data.message)
       navigate('/posts');
     } catch (err) {
       console.log(err);

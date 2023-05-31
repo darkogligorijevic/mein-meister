@@ -64,7 +64,7 @@ const Login = () => {
                   </svg>
                   <input onChange={handleChange} class="pl-2 outline-none border-none" name='password' type='password' placeholder='Lozinka' />
           </div>
-                  <button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Prijavi se</button>
+                  <button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 hover:bg-black duration-300">Prijavi se</button>
                   <span class="text-sm ml-2">Nemate nalog? <Link className='font-semibold underline hover:text-gray-500 duration-200' to='/register'>Registrujte se.</Link></span>
                   {err && <span className='text-red-500 block text-center bg-gray-200 px-4 py-2 mt-2'>{err}</span>}
         </form>

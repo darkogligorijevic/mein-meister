@@ -43,15 +43,15 @@ const PostCard = ({
               alt={'profile' + id}
             />
             <div>
-              <p>{firstName + ' ' + lastName}</p>
-              <p className='font-semibold'>{city}</p>
+              <p className='font-bold'>{firstName + ' ' + lastName}</p>
+              <p className='font-medium'>{city}</p>
             </div>
           </div>
           
           {averageStar ? (
-            <div className='text-thin flex items-center gap-1'>
+            <div className='text-thin flex items-center gap-1 text-orange-500'>
               <StarIcon fontSize='16px' />
-              <span>{averageStar}</span>
+              <span className='text-black font-bold'>{averageStar}</span>
             </div>
           ) : (
             <p>

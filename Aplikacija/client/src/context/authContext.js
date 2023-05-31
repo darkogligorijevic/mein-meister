@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AuthContext = createContext();
 
@@ -18,6 +20,7 @@ export const AuthContextProvider = ({ children }) => {
     const token = user.token;
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user)); // update localStorage
+    toast.success(user.message)
   };
 
   const logout = async () => {

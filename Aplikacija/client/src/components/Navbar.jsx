@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
+import PlumbingIcon from '@mui/icons-material/Plumbing';
 
 const Navbar = () => {
   const [burger, setBurger] = useState(false);
@@ -44,7 +45,8 @@ const Navbar = () => {
             <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
                 <div className="flex justify-between items-center text-white">
                     
-                    <div>
+                    <div className="flex items-center">
+                        <PlumbingIcon />
                         { currentUser ? <Link to='/posts' className="text-xl font-black">Mein<span className="text-orange-500">Meister</span></Link> : <Link to='/' className="text-xl font-black">Mein<span className="text-orange-500">Meister</span></Link>}
                     </div>
                     { currentUser ?    
@@ -103,7 +105,8 @@ const Navbar = () => {
         <div className="py-5">
             <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
                 <div className="flex justify-between items-center text-black">
-                    <div>
+                    <div className="flex items-center">
+                    <PlumbingIcon />
                     { currentUser ? <Link to='/posts' className="text-xl font-black">Mein<span className="text-orange-500">Meister</span></Link> : <Link to='/' className="text-xl font-black">Mein<span className="text-orange-500">Meister</span></Link>}
                     </div>
                     { currentUser ?    
@@ -123,7 +126,7 @@ const Navbar = () => {
                     </div>  
                      
                      :
-                     <div className="hidden md:block flex items-center gap-4">
+                     <div className="hidden md:block items-center gap-4">
                             <div className="items-center flex gap-8">
                                 <Link className="hover:text-gray-300 hover:scale-105 duration-300" to='/posts'>Usluge</Link>
                                 <Link className="hover:text-gray-300 hover:scale-105 duration-300" to='/login'>Prijavite se</Link>

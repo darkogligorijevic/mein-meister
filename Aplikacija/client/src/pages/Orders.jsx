@@ -3,7 +3,7 @@ import Order from '../components/Order'
 
 const Orders = () => {
   return (
-    <div className='py-[128px]'>
+    <div className='py-[128px] min-h-screen'>
         <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]'>
             <div className='flex flex-col gap-12'>
                 <div>

@@ -1,20 +1,21 @@
 import React from 'react';
 import { useState, useContext } from 'react';
-//import { MeisterContext } from '../context/meisterContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
+import PrimaryButton from '../components/PrimaryButton';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BecomeMeister = () => {
   const [inputs, setInputs] = useState({
-    phone: '',
+    phone: ''
   });
 
   const [err, setError] = useState(null)
   const navigate = useNavigate()
 
   const { updateIsMeister } = useContext(AuthContext)
-  //const { becomeMeister } = useContext(MeisterContext)
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -27,19 +28,17 @@ const BecomeMeister = () => {
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
+        }
       };
       const response = await axios.post(
         'http://localhost:5000/api/workers',
         inputs,
         config
       );
-      console.log(config)
-      updateIsMeister(true); // update isMeister in localStorage
-      console.log(response)
+      updateIsMeister(true); 
+      toast.success(response.data.message)
       navigate('/posts')
     } catch (err) {
-      console.log(err);
       setError(err.response.data.message)
     }
   };
@@ -47,26 +46,39 @@ const BecomeMeister = () => {
   console.log(inputs);
 
   return (
-    <div className="flex flex-col justify-center relative h-screen py-[128px] bg-cover bg-no-repeat bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1499815022134-5a333f5a299c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1325&q=80')" }}>
-    <div className="absolute inset-0 bg-black opacity-60"></div>
-    <div className="flex justify-center absolute right-0 left-0 mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
-      <div className='flex flex-col gap-8 rounded-3xl w-full sm:w-2/3 md:w-1/2 2xl:w-1/3 bg-orange-500 px-8 py-16'>
-        <div className='flex flex-col justify-center gap-4'>
-          <h1 className='text-white text-4xl font-black text-center'>Postanite Majstor</h1>
+    <div className="py-[128px]">
+      <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
+        <div className="p-12 shadow-lg">
+          <h1 className="text-2xl font-black text-black">Postanite majstor</h1>
+          <form>
+            <div className="grid grid-cols-1 gap-6 mt-4">
+              <div>
+                <label className="text-gray-500" htmlFor="phone">
+                  Broj telefona
+                </label>
+                <input
+                  onChange={handleChange}
+                  name="phone"
+                  type="text"
+                  className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md"
+                />
+              </div>
+            </div>
+            <div className="flex justify-start mt-6">
+              <PrimaryButton
+                content="Postani majstor"
+                onClick={handleSubmit}
+                primaryColor="black"
+                secondaryColor="white"
+              />
+            </div>
+            {err && (
+              <span className="text-red-500 block text-center bg-gray-200 py-4 mt-3">{err}</span>
+            )}
+          </form>
         </div>
-        <form className='flex flex-col gap-4'>
-          <input onChange={handleChange} className='px-8 py-2 rounded-xl outline-none' name='phone' type='phone' placeholder='Broj telefona' />
-          <button onClick={handleSubmit} className="text-white px-4 py-2 bg-transparent border border-white hover:border-white rounded-xl sm:px-8 sm:hover:scale-105 sm:hover:bg-white sm:hover:text-black sm:duration-300 mt-4 font-black">Postanite majstor</button>
-        </form>
-        {err && 
-          <div className='px-4 py-2 bg-white mt-2'>
-            <p className='text-red-500 self-center'>{err}</p>
-          </div>
-          }
-
       </div>
     </div>
-  </div>
   )
 }
 

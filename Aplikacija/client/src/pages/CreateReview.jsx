@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import PrimaryButton from '../components/PrimaryButton';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateReview = () => {
 
@@ -30,13 +32,12 @@ const CreateReview = () => {
               Authorization: `Bearer ${token}`,
             }
         }
-        await axios.post(`http://localhost:5000/api/reviews/postId/${postId}`, 
+        const response = await axios.post(`http://localhost:5000/api/reviews/postId/${postId}`, 
             inputs,
             config
         )
-
+        toast.success(response.data.message)
         navigate(`/post/${postId}`)
-
     } catch(err) {
         setError(err.response.data.message);       
     }

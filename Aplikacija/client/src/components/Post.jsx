@@ -6,6 +6,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 import StarIcon from '@mui/icons-material/Star';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 dayjs.extend(relativeTime);
 
@@ -118,7 +120,7 @@ const Post = () => {
               <div className='flex gap-2'>
                 <img className='w-12 h-12 rounded-full object-cover' src={proxy + imageUrl} alt='' />
                 <div>
-                  <p className='font-semibold'>{firstName + ' ' + lastName}</p>
+                  <p className='font-bold'>{firstName + ' ' + lastName}</p>
                   <p className='text-sm font-medium'>{city}</p>
                   <p className='italic text-sm'>Postavljeno {createdAt}</p>
                 </div>
@@ -140,12 +142,12 @@ const Post = () => {
             </div>
             <div>
             {currentUser && currentUser.userId === userId && (
-              <div>
-                <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='bg-green-500 px-4 py-2 text-white font-bold cursor-pointer'>
-                  Azuriraj
+              <div className='flex gap-4'>
+                <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='hover:text-green-500 duration-300'>
+                  <EditIcon />
                 </Link>
-                <Link onClick={deletePost} className='bg-red-500 px-4 py-2 text-white font-bold cursor-pointer'>
-                  Obrisi
+                <Link onClick={deletePost} className='hover:text-red-500 duration-300'>
+                  <DeleteIcon />
                 </Link>
               </div>
             )}

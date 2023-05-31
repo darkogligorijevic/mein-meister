@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import PrimaryButton from '../components/PrimaryButton'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ChangePassword = () => {
 
@@ -10,7 +12,7 @@ const ChangePassword = () => {
     newPassword: '',
   });
 
-  const [err, setErr] = useState(null)
+  const [err, setError] = useState(null)
 
   const navigate = useNavigate()
 
@@ -31,14 +33,13 @@ const ChangePassword = () => {
             inputs, 
             config
         ).then((response) => {
-            console.log(response.data)
+            toast.success(response.data.message)
             navigate('/posts')
         }).catch((err) => {
-            console.log(err)
+            setError(err.response.data.message)
         })
     } catch (err) {
-        console.log(err)
-        setErr(err)
+        setError(err.response.data.message)
     }
   }
 

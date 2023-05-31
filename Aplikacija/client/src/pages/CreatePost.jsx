@@ -8,6 +8,8 @@ import CategorySelection from '../components/CategorySelection';
 import PrimaryButton from '../components/PrimaryButton';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreatePost = () => {
   const state = useLocation().state
@@ -72,8 +74,10 @@ const CreatePost = () => {
               },
             })
             .then((response) => {
-              console.log(response.data);
-              navigate(`/post/${postId}`);
+              toast.success(response.data.message)
+              setTimeout(() => {
+                navigate(`/post/${postId}`);
+              }, 2000)
             })
             .catch((error) => {
               console.log(error);
@@ -86,7 +90,7 @@ const CreatePost = () => {
               },
             })
             .then((response) => {
-              console.log(response.data);
+              toast.success(response.data.message)
               navigate('/posts');
             })
             .catch((error) => {
@@ -94,7 +98,7 @@ const CreatePost = () => {
               setError(error.response.data.message);
             });
     } catch (err) {
-      console.log(err)
+      setError(err.response.data.message)
     }
   };
 

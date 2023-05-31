@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../context/authContext';
 import FileInput from '../components/FileInput';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const state = useLocation().state
@@ -15,15 +17,9 @@ const Register = () => {
     imageUrl: state?.imageUrl || null,
   });
 
-  const {currentUser, logout} = useContext(AuthContext)
+  const { logout } = useContext(AuthContext)
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     navigate("/posts");
-  //   }
-  // }, [currentUser, navigate]);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -55,7 +51,9 @@ const Register = () => {
           console.log(response.data);
           localStorage.setItem('user', JSON.stringify(response.data.user));
           logout()
+          toast.success(response.data.message)
           navigate('/login');
+          toast.success('Prijavite se opet kako bi potvrdili svoje podatke')
         }).catch((error) => {
           console.log(error);
           setError(error.response.data.message);
@@ -65,7 +63,9 @@ const Register = () => {
         await axios.post(`http://localhost:5000/api/auth/register`, formData
         ).then((response) => {
           console.log(response.data);
-          navigate('/posts');
+          toast.success(response.data.message)
+          navigate('/login');
+          toast.info('Prijavite se')
         }).catch((error) => {
           console.log(error);
           setError(error.response.data.message);
@@ -134,7 +134,7 @@ const Register = () => {
                   <input onChange={handleChange} className="pl-2 outline-none w-full border-none" name='password' type='password' placeholder='Lozinka' />
                 </div> : null}
                   <FileInput name='imageUrl' onChange={handleFileChange}/>
-                  <button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">{ !state ? 'Pridruzite nam se' : 'Azuriraj'}</button>
+                  <button onClick={handleSubmit} type="submit" class="block w-full bg-orange-500 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 hover:bg-black duration-300">{ !state ? 'Pridruzite nam se' : 'Azuriraj'}</button>
                   { !state ? <span className="text-sm ml-2">Vec imate nalog? <Link className='font-semibold underline hover:text-gray-500 duration-200' to='/login'>Prijavite se.</Link></span> : null}
                   {err && <span className='text-red-500 block text-center bg-gray-200 py-4 mt-2'>{err}</span>}
         </form>
