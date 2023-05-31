@@ -65,7 +65,16 @@ const Order = () => {
   };  
   
   const currentDate = new Date()
-  console.log(currentDate)
+  const givenDate = new Date(items[0]?.scheduledDate)
+  console.log("current:", currentDate)
+  console.log("given:", givenDate)
+  if (currentDate > givenDate) {
+    console.log("ostavi review")
+  } else {
+    console.log("nista")
+  }
+
+  console.log(items)
 
   return (
     <div className='flex flex-col gap-16'>
@@ -92,13 +101,20 @@ const Order = () => {
             {item.type === 'notification' && (
               <div className='flex items-center gap-2'>
                 <img className='h-12 w-12 rounded-full object-cover' src={proxy + (item.workerId.userId.imageUrl || '')} alt='' />
-                {item.isAccepted ? (
+                {item.isAccepted && currentDate < givenDate ? (
                   <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> je odobrio Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
-                ) : (
-                  <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> jos nije prihvatio/la Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
-                )}
+                ) : item.isAccepted && currentDate > givenDate ? (
+                  <div>
+                    <p>Kakav je bio majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span>?</p>
+                    <Link to={`/create-review/${item.postId._id}`} className='text-orange-500'>
+                    {'Ocenite majstora ->'}
+                  </Link>
+                  </div>
+                ) : 
+                <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> jos nije odobrio Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
+                }
               </div>
-              
+
             )}
           </div>
           <button className='text-gray-400'>x</button>

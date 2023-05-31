@@ -61,16 +61,10 @@ const Register = () => {
           setError(error.response.data.message);
         });
       } else {
-        const passwordFormData = new FormData();
-        passwordFormData.append('password', inputs.password);
-  
-        await axios.patch(`http://localhost:5000/api/auth/update`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }).then((response) => {
+        formData.append('password', inputs.password)
+        await axios.post(`http://localhost:5000/api/auth/register`, formData
+        ).then((response) => {
           console.log(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data.user));
           navigate('/posts');
         }).catch((error) => {
           console.log(error);

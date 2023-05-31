@@ -12,7 +12,7 @@ router.use(checkAuth);
 
 router.post('/postId/:postId',
 [
-  check('star').isFloat({min:1, max:5}),
+  check('star').isNumeric({min:1, max:5}),
   check('reviewText').trim().not().isEmpty().isLength({min:5})
 ],
 reviewControllers.postReviewByPostId);
