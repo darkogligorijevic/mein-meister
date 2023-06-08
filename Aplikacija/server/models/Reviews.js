@@ -5,6 +5,6 @@ const reviewSchema = new mongoose.Schema({
   userId: {type: mongoose.Schema.Types.ObjectId, ref:'User',required:true},
   star: {type: Number, required:true},
   reviewText: {type: String, required:true}
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('Review',reviewSchema)

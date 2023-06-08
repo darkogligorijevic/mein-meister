@@ -13,7 +13,7 @@ const Cards = () => {
                         <h2 className="text-2xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold lg:w-1/2">Ko smo mi?</h2>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut doloribus quibusdam ad. Veniam sed dolor molestiae </p>
                     </div>
-                    <Link className="text-center px-4 bg-transparent border border-black rounded-xl sm:self-start sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-start mt-4 font-black">Pridruzite nam se</Link>
+                    <Link to='/register' className="text-center px-4 bg-transparent border border-black rounded-xl sm:self-start sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300 lg:self-start mt-4 font-black">Pridruzite nam se</Link>
                 </div>
             </div>
         

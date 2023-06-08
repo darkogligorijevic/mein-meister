@@ -12,15 +12,18 @@ orderControllers.getOrderById)
 
 router.post('/post/:postId',
 [
-  check('phoneNumber').isNumeric(),
-  check('description').trim().not()
-  .isEmpty().isLength({min:5})
-
+  check('phoneNumber').matches(/^(\+381|0)6[0-9]{1}([0-9]{7}|[0-9]{6}|[0-9]{5}|[0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})$/),
+  check('description').trim().not().isEmpty()
 ]
 ,orderControllers.postOrderByPostId)
 
-router.get('/post/:postId',orderControllers.getOrdersByPostId)
+router.get('/worker/:workerId', orderControllers.getAllOrdersByWorkerId)
+router.get('/user/:userId', orderControllers.getAllOrdersByUserId)
 
-router.get('/post/:postId/user/:userId',orderControllers.getOrderByUser) // ??
+router.put('/:orderId', orderControllers.updateOrderById);
+
+// router.get('/post/:postId',orderControllers.getOrdersByPostId)
+
+// router.get('/post/:postId/user/:userId',orderControllers.getOrderByUser) // ??
 
 module.exports = router;

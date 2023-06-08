@@ -1,51 +1,62 @@
-const {validationResult} = require('express-validator')
+const { validationResult } = require('express-validator');
+const User = require('../models/User');
+const Worker = require('../models/Worker');
+const HttpError = require('../models/HttpError');
 
-const Worker = require('../models/Worker')
-const HttpError = require('../models/HttpError')
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-module.exports.postWorkerCreate = async (req,res,next) => {
+module.exports.postWorkerCreate = async (req, res, next) => {
   const errors = validationResult(req);
-  console.log(errors)
+  console.log(errors);
   if (!errors.isEmpty()) {
-    return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
-    );
+    return next(new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422));
   }
-  const {phone} = req.body
-  console.log(req.userId)
+  
+  const { phone } = req.body;
+
+  let user;
+  try {
+    user = await User.findById(req.userId);
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Korisnik ne postoji', 404);
+    return next(error);
+  }
+
+  let existingWorker;
+  try {
+    existingWorker = await Worker.findOne({ userId: req.userId });
+    if (existingWorker) {
+      return next(new HttpError('Korisnik je već postao majstor', 422));
+    }
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
+  }
 
   const newWorker = new Worker({
-    phoneNumber:+phone,
-    userId:req.userId, //userId:userId --> hardcoded userId, promenicu kada dodam user auth, bice u req.userId
-    posts:[]
-  })
+    phoneNumber: phone,
+    userId: req.userId,
+    posts: []
+  });
 
-  let worker;
-  try {
-    worker = await Worker.findOne({userId:req.userId});
-  } catch (err) {
   
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
-  }
-
-  if (worker) {
-    const error = new HttpError("You have already become a maister",404)
-    return next(error)
-  }
-
   try {
-  await newWorker.save()
-  } catch(err) {
-    console.log('2')
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
+    await newWorker.save();
+    user.isMeister = true; // set the isMeister field of the user to true
+    await user.save(); // save the updated user document to the database
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
   }
+  
+  res.status(201).json({ message: 'Uspešno ste postali majstor', workerId: newWorker._id.toString() });
+};
 
-  res.status(201).json({message:"You have successfully become a meister"})
-}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,7 +65,7 @@ module.exports.getWorkerAll = async (req,res,next) => {
   try {
     workers = await Worker.find({}).populate('userId','-password')
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -70,7 +81,7 @@ module.exports.getWorkerById = async (req,res,next) => {
   try {
     worker = await Worker.findOne({_id:workerId}).populate('userId','-password')
   } catch(err) {
-    const error = new HttpError('Something went wrong',500)
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
   }
 
@@ -79,76 +90,25 @@ module.exports.getWorkerById = async (req,res,next) => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.deleteWorkerById = async (req,res,next) => {
-  const {workerId} = req.params;
+module.exports.getWorkerByUserId = async (req, res, next) => {
+  const { userId } = req.params;
 
   let worker;
   try {
-    worker = await Worker.findOne({_id:workerId})
-  } catch(err) {
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
+    worker = await Worker.findOne({ userId }).populate('userId', '-password');
+  } catch (err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije', 500);
+    return next(error);
   }
 
-  console.log(worker.userId, req.userId)
-  if(!worker || worker.userId.toString() !== req.userId.toString()) {
-    const error = new HttpError("There is no such a worker, or you are not allowed to delete this worker",404)
-    return next(error)
+  if (!worker) {
+    const error = new HttpError('Majstor nije pronađen', 404);
+    return next(error);
   }
 
-  try {
-    await Worker.findOneAndDelete({_id:workerId});
-  } catch(err) {
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
-  }
-  
-  res.json({message:"Meister is deleted."})
-
-}
+  res.status(200).json(worker);
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.patchWorkerById = async (req,res,next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError('Invalid inputs passed, please check your data.', 422)
-    );
-  }
-  const {workerId} = req.params;
-  const {phone} = req.body;
 
-  let worker;
-  try {
-    worker = await Worker.findOne({_id:workerId})
-  } catch(err) {
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
-  }
-
-  console.log(worker.userId,req.userId)
-  if(!worker || worker.userId.toString() !== req.userId.toString()) {
-    const error = new HttpError("There is no such a worker, or you are not allowed to update this worker",404)
-    return next(error)
-  }
-
-
-
-  const updateWorker = {
-    _id:worker._id,
-    userId: worker.userId,
-    phoneNumber:phone ? +phone : worker.phone,
-    posts:[...worker.posts]
-  }
-
-
-  try {
-  await Worker.findOneAndUpdate({_id:workerId},updateWorker);
-  } catch(err) {
-    const error = new HttpError('Something went wrong',500)
-    return next(error)
-  }
-  res.status(202).json({message:"Succesfully updated resource"})
-
-}
