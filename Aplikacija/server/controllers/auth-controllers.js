@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {validationResult} = require('express-validator')
@@ -44,8 +45,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
     return next(error);
   }
 
-
-  const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : null;
+  const imageUrl = req.file ? req.file.path.replace(/\\/g, "/") : 'public/images/anonymous.png';
 
 
   const newUser = new User({
@@ -134,16 +134,6 @@ module.exports.updateUserLogIn = async (req, res, next) => {
   }
 
   const { firstName, lastName, email } = req.body;
-  let { imageUrl } = req.body;
-
-  if (req.file) {
-    imageUrl = req.file.path.replace(/\\/g, "/");
-  }
-
-  if (!imageUrl) {
-    const error = new HttpError('File nije izabran', 422);
-    return next(error);
-  }
 
   let user;
   try {
@@ -158,9 +148,19 @@ module.exports.updateUserLogIn = async (req, res, next) => {
     return next(error);
   }
 
-  if (imageUrl !== user.imageUrl) {
+  let imageUrl;
+
+  if (req.file) {
+    imageUrl = req.file.path.replace(/\\/g, "/");
+  } else {
+    imageUrl = user.imageUrl;
+  }
+
+
+  if (imageUrl !== user.imageUrl && user.imageUrl !== 'public/images/anonymous.png') {
     clearImage(user.imageUrl);
   }
+
 
   const updateUser = {
     firstName: firstName || user.firstName,
@@ -200,6 +200,11 @@ module.exports.updateUserPassword = async (req,res,next) => {
     );
   }
   const {oldPassword, newPassword} = req.body
+
+  if (oldPassword === newPassword) {
+    const error = new HttpError('Nova šifra ne može biti ista kao stara',422)
+    return next(error);
+  }
 
   let user;
   try {
@@ -287,6 +292,28 @@ module.exports.deleteUserLogin = async (req,res,next) => {
       return next(error);
     }
 
+
+    // if (posts.length > 0) {
+    // ovde radi
+    // try {
+    //   const result = await Review.deleteMany({postId:posts._id});
+    //   console.log(result)
+    // } catch(err) {
+    //   const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    //   return next(error);
+    // }
+
+    // try {
+    //   const result = await Order.deleteMany({postId:posts._id})
+    //   console.log(result);
+    // } catch(err) {
+    //   const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    //   return next(error);
+    // }
+
+     // deleteMany orders
+     //delete many reviews
+
     const output = posts.map((post)=>{
       clearImage(post.imageUrl);
     })
@@ -298,6 +325,7 @@ module.exports.deleteUserLogin = async (req,res,next) => {
       const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
       return next(error);
     }
+    // }
 
     try {
       await Worker.findOneAndDelete({_id:worker._id});
@@ -326,7 +354,9 @@ module.exports.deleteUserLogin = async (req,res,next) => {
 
   // brisi i revies i orders
   
-  clearImage(user.imageUrl)
+  if(user.imageUrl !== 'public/images/anonymous.png') {
+    clearImage(user.imageUrl)
+  }
 
   try {
     await User.findByIdAndDelete({_id:user._id})
