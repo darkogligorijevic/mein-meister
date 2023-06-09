@@ -292,40 +292,42 @@ module.exports.deleteUserLogin = async (req,res,next) => {
       return next(error);
     }
 
+    console.log(posts);
+    if (posts.length > 0) {
+     for (let i =0;i<posts.length;i++) {
+        let post = posts[i];
+      try {
+        const result = await Review.deleteMany({postId:post._id});
+        console.log(result)
+      } catch(err) {
+        const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+        return next(error);
+      }
 
-    // if (posts.length > 0) {
-    // ovde radi
-    // try {
-    //   const result = await Review.deleteMany({postId:posts._id});
-    //   console.log(result)
-    // } catch(err) {
-    //   const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
-    //   return next(error);
-    // }
+      try {
+        const result = await Order.deleteMany({postId:post._id})
+        console.log(result);
+      } catch(err) {
+        const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+        return next(error);
+      }
 
-    // try {
-    //   const result = await Order.deleteMany({postId:posts._id})
-    //   console.log(result);
-    // } catch(err) {
-    //   const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
-    //   return next(error);
-    // }
+      // deleteMany orders
+      //delete many reviews
 
-     // deleteMany orders
-     //delete many reviews
-
-    const output = posts.map((post)=>{
-      clearImage(post.imageUrl);
-    })
+      const output = posts.map((post)=>{
+        clearImage(post.imageUrl);
+      })
 
 
-    try {
-      await Post.deleteMany({workerId:worker._id})
-    } catch(err) {
-      const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
-      return next(error);
+      try {
+        await Post.deleteMany({workerId:worker._id})
+      } catch(err) {
+        const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+        return next(error);
+      }
     }
-    // }
+  }
 
     try {
       await Worker.findOneAndDelete({_id:worker._id});
