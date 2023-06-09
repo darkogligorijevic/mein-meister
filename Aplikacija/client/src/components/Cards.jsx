@@ -18,7 +18,7 @@ const Cards = () => {
             </div>
         
 
-        <div className="flex flex-col xl:flex-row xl:gap-8 mt-24 xl:mt-32">
+        <div className="flex flex-col 2xl:flex-row xl:gap-8 mt-24 2xl:mt-32">
             <Card num={"01"} heading={"Nadji brzo i lako"} desc={"Samo uz nekoliko klikova dolazite do pronalaska majstora u Vasoj okolini koji ce se uvek pobrinuti za Vas problem."}/>
             <Card num={"02"} heading={"Nadji brzo i lako"} desc={"Samo uz nekoliko klikova dolazite do pronalaska majstora u Vasoj okolini koji ce se uvek pobrinuti za Vas problem."}/>
             <Card num={"03"} heading={"Nadji brzo i lako"} desc={"Samo uz nekoliko klikova dolazite do pronalaska majstora u Vasoj okolini koji ce se uvek pobrinuti za Vas problem."}/>

@@ -8,6 +8,6 @@ const orderSchema = new mongoose.Schema({
   description:{type:String,required:true},
   isAccepted: {type:Boolean, default:false},
   scheduledDate: {type:Date}
-})
+},{ timestamps: true })
 
 module.exports = mongoose.model('Order',orderSchema);

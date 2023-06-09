@@ -79,12 +79,12 @@ const Order = () => {
   return (
     <div className='flex flex-col gap-16'>
       {items?.map((item) => (
-        <div key={item._id} className='flex gap-4 items-center justify-between'>
+        <div key={item._id} className='flex gap-4 items-center justify-center sm:justify-between'>
           <div>
             {item.type === 'order' && (
-              <div className='flex items-center gap-2'>
-                <img className='h-12 w-12 rounded-full object-cover' src={proxy + (item.userId?.imageUrl || '')} alt='' />
-                <div className='flex flex-col'>
+              <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
+                <img className='h-24 w-24 sm:h-16 sm:w-16 rounded-full object-cover self-center sm:self-start' src={proxy + (item.userId?.imageUrl || '')} alt='' />
+                <div className='flex flex-col gap-1 items-center text-center sm:text-start sm:items-start'>
                   {!item.isAccepted ? (
                     <p>
                       Korisnik <span className='font-semibold'>{item.userId.firstName} {item.userId.lastName}</span> Vas je zaposlio putem usluge <Link to={`/post/${item.postId._id}`} className='font-semibold underline'>{item.postId.title}</Link> za datum {formatDate(item.scheduledDate)}
@@ -99,8 +99,9 @@ const Order = () => {
               </div>
             )}
             {item.type === 'notification' && (
-              <div className='flex items-center gap-2'>
-                <img className='h-12 w-12 rounded-full object-cover' src={proxy + (item.workerId.userId.imageUrl || '')} alt='' />
+              <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
+                <img className='h-24 w-24 sm:h-16 sm:w-16 rounded-full object-cover self-center sm:self-start' src={proxy + (item.workerId.userId.imageUrl || '')} alt='' />
+                <div className='flex flex-col gap-1 items-center text-center sm:text-start sm:items-start'>
                 {item.isAccepted && currentDate < givenDate ? (
                   <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> je odobrio Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
                 ) : item.isAccepted && currentDate > givenDate ? (
@@ -113,11 +114,10 @@ const Order = () => {
                 ) : 
                 <p>Majstor <span className='font-semibold'>{item.workerId.userId.firstName} {item.workerId.userId.lastName}</span> jos nije odobrio Vasu ponudu za datum {formatDate(item.scheduledDate)}</p>
                 }
+                </div>
               </div>
-
             )}
           </div>
-          <button className='text-gray-400'>x</button>
         </div>
       ))}
     </div>

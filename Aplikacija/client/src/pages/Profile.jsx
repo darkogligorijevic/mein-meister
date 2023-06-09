@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Profile = () => {
   const [worker, setWorker] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [isDeleteClicked, setIsDeleteClicked] = useState(false)
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
@@ -65,27 +66,35 @@ const Profile = () => {
     fetchAllPostsByWorkerId();
   }, [currentUser.userId, worker._id]);
 
+  const confirmDeleteProfile = () => {
+    setIsDeleteClicked(!isDeleteClicked)
+  }
+
   return (
     <div className='py-[128px] min-h-screen'>
-      <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]'>
-        <div className='flex flex-col md:flex-row gap-4'>
+      <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px] relative'>
+        <div className='flex flex-col md:flex-row gap-4 items-center'>
           <img
-            className='md:rounded-full h-full w-full md:h-40 md:w-40 object-cover'
+            className='rounded-full h-40 w-40 object-cover self-center'
             src={proxy + currentUser.image}
             alt=''
           />
           <div className='flex flex-col gap-2 justify-evenly'>
             <h1 className='text-3xl font-bold'>{currentUser.firstName + ' ' + currentUser.lastName}</h1>
             <p className='text-xl font-semibold'>{currentUser.email}</p>
-            {currentUser.isMeister ? (
+            {currentUser.isMeister && !currentUser.isAdministrator ? (
               <p className='text-lg font-medium'>
                 Uloga: <span className='text-orange-500'>Majstor</span>
               </p>
-            ) : (
+            ) : !currentUser.isMeister && !currentUser.isAdministrator ? (
               <p className='text-lg font-medium'>
                 Uloga: <span className='text-orange-500'>Korisnik</span>
               </p>
-            )}
+            ) : 
+              <p className='text-lg font-medium'>
+                Uloga: <span className='text-orange-500'>Administrator</span>
+              </p>
+            }
           </div>
         </div>
         {posts?.map((post) => (
@@ -123,13 +132,25 @@ const Profile = () => {
           <Link to={`/register?edit=${currentUser.userId}`} state={currentUser} className='hover:text-green-500 duration-300  flex gap-1 items-center'>
             <EditIcon /> Ažuriraj profil
           </Link>
-          <Link onClick={handleDeleteUser} className='hover:text-red-500 duration-300  flex gap-1 items-center'>
+          <Link onClick={confirmDeleteProfile} className='hover:text-red-500 duration-300  flex gap-1 items-center'>
             <DeleteIcon /> Obriši profil
           </Link>
           <Link to={`/change-password`} state={currentUser} className='hover:text-orange-500 duration-300 flex gap-1 items-center'>
             <KeyIcon /> Izmenite lozinku
           </Link>
         </div>
+        { isDeleteClicked ?        
+        <div className='fixed left-0 right-0 bottom-[20%] lg:left-[25%] md:bottom-[30%] lg:right-[25%]'>
+            <div className='fixed bg-black opacity-75 w-full h-full top-0 left-0 right-0'></div>
+            <div className='flex relative flex-col gap-8 items-center p-40 z-[1]'>
+              <div className='absolute top-0 w-full h-full bg-gray-900 z-[-1] blur-md rounded-2xl'></div>
+              <span className='2xl:text-4xl text-xl text-center font-black text-white'>Da li ste sigurni da zelite da izbrisete svoj profil?</span>            
+              <div className='flex gap-4 flex-col md:flex-row lg:gap-16'>
+                  <button onClick={handleDeleteUser} className='px-16 py-2 rounded-md bg-green-500 font-black text-white'>Da</button>
+                  <button onClick={confirmDeleteProfile} className='px-16 py-2 rounded-md bg-red-500 font-black text-white'>Ne</button>
+              </div>
+            </div>
+        </div> : null}
       </div>
     </div>
   );

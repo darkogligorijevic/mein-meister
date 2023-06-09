@@ -13,6 +13,7 @@ const Posts = () => {
     category: '',
   });
   const [averageStars, setAverageStars] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosts = useCallback(async () => {
     const category = new URLSearchParams(location.search).get('cat');
@@ -89,15 +90,19 @@ const Posts = () => {
         averageStarsMap[post._id] = averageStarValues[index];
       });
       setAverageStars(averageStarsMap);
+      setIsLoading(false); // Set loading state to false once data is fetched
     };
 
+    setIsLoading(true); // Set loading state to true before fetching average stars
     fetchAverageStars();
   }, [posts]);
 
-  console.log(inputs);
+  const sortedPosts = [...posts].sort(
+    (a, b) => averageStars[b._id] - averageStars[a._id]
+  );
 
   return (
-    <div className="py-[128px]">
+    <div className="py-[128px] min-h-screen">
       <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
         <div className="flex flex-col gap-36">
           <div className="flex flex-col gap-8">
@@ -119,22 +124,28 @@ const Posts = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 md:gap-8 gap-16">
-            {posts.map((post) => (
-              <div key={post._id}>
-                <PostCard
-                  title={post.title}
-                  postImage={post.imageUrl}
-                  description={post.description}
-                  city={post.city}
-                  id={post._id}
-                  profileImage={post.workerId.userId.imageUrl}
-                  firstName={post.workerId.userId.firstName}
-                  lastName={post.workerId.userId.lastName}
-                  category={post.category}
-                  averageStar={averageStars[post._id]}
-                />
-              </div>
-            ))}
+            {isLoading ? ( // Render a loading state while fetching data
+              <p>Ucitavanje...</p>
+            ) : sortedPosts.length > 0 ? (
+              sortedPosts.map((post) => (
+                <div key={post._id}>
+                  <PostCard
+                    title={post.title}
+                    postImage={post.imageUrl}
+                    description={post.description}
+                    city={post.city}
+                    id={post._id}
+                    profileImage={post.workerId.userId.imageUrl}
+                    firstName={post.workerId.userId.firstName}
+                    lastName={post.workerId.userId.lastName}
+                    category={post.category}
+                    averageStar={averageStars[post._id]}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>Jos nema dodatih usluga.</p>
+            )}
           </div>
         </div>
       </div>

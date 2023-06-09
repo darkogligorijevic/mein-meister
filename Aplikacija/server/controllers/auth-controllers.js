@@ -23,7 +23,7 @@ module.exports.postUserRegister = async (req,res,next)=>{
       new HttpError('Podaci koje ste poslali nisu validni, molimo pošaljite validne podatke', 422)
     );
   }
-  const {firstName, lastName, email, password} = req.body;
+  const {firstName, lastName, email, password, isAdministrator} = req.body;
   let existingUser
   try {
   existingUser = await User.findOne({email:email});
@@ -53,7 +53,8 @@ module.exports.postUserRegister = async (req,res,next)=>{
     lastName,
     imageUrl,
     email,
-    password:hashedPassword
+    password:hashedPassword,
+    isAdministrator
   })
 
 
@@ -118,7 +119,7 @@ module.exports.postUserLogin = async (req,res,next)=>{
   }
 
 
-  res.status(200).json({message:'Uspešno ste se ulogovali',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister})
+  res.status(200).json({message:'Uspešno ste se ulogovali',userId:user._id,email:user.email,firstName:user.firstName,lastName:user.lastName,image:user.imageUrl,token:token, isMeister: user.isMeister, isAdministrator: user.isAdministrator})
 
 }
 

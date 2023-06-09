@@ -12,7 +12,8 @@ fileUpload.single('imageUrl'),
   check('firstName').trim().not().isEmpty().isLength({max:25}),
   check('lastName').trim().not().isEmpty().isLength({max:25}),
   check('email').normalizeEmail().isEmail(),
-  check('password').trim().isLength({min:7})
+  check('password').trim().isLength({min:7}),
+  check('isAdministrator')
 ],
 authControllers.postUserRegister);
 

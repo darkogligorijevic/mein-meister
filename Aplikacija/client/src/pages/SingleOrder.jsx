@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { DateTimePicker } from 'react-rainbow-components';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const SingleOrder = () => {
   const state = useLocation().state
@@ -94,7 +97,7 @@ const SingleOrder = () => {
         scheduledDate: inputs.scheduledDate || order.scheduledDate,
       };
   
-      await axios.put(`http://localhost:5000/api/orders/${orderId}`, updatedData, config);
+      await axios.put(`http://localhost:5000/api/orders/${orderId}`, config, updatedData);
       navigate('/orders');
     } catch (err) {
       console.log(err);
@@ -104,31 +107,42 @@ const SingleOrder = () => {
   console.log(inputs)
 
   return (
-    <div className="py-[128px]">
+    <div className="py-[128px] min-h-screen">
       <div className="mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]">
         <div className="flex flex-col gap-8">
-          <h1 className="text-2xl">
+          <h1 className="text-4xl font-bold">
             Informacije koje je korisnik{' '}
             {order.userId && (
-              <span className="font-semibold">
+              <span className="font-black">
                 {order.userId.firstName + ' ' + order.userId.lastName}
               </span>
             )}{' '}
             ostavio/la Vama:
           </h1>
-          <div className="flex flex-col gap-4">
-            <p>
-              Broj telefona: <span className="font-semibold">{order.phoneNumber}</span>
+          <div className="flex flex-col gap-8">
+            <p className='flex flex-col gap-2'>
+              <span className='font-bold'>Opis problema:</span> {order.description && parse(order.description)}
             </p>
-            <p>
-              Email: <span className="font-semibold">{order.userId && order.userId.email}</span>
-            </p>
-            <p>
-              Datum i vreme: <span className="font-semibold">{formatDate(order.scheduledDate)}</span>
-            </p>
-            <p>
-              Opis problema: {order.description && parse(order.description)}
-            </p>
+            <div className='flex flex-col md:flex-row gap-4'>
+              <a href={`tel:${order.phoneNumber}`} className='md:self-start' >
+                <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+                  <PhoneIcon />
+                  <span>{order.phoneNumber}</span>
+                </div>
+              </a>
+              <a href={`mailto:${order.userId && order.userId.email}`} className='md:self-start' >
+              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+                  <EmailIcon />
+                  <span>{order.userId && order.userId.email}</span>
+                </div>
+              </a>
+              
+              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md md:self-start text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+                <CalendarMonthIcon />
+                <span>{formatDate(order.scheduledDate)}</span>
+              </div>
+            </div>
+            
             { !order.isAccepted ?
             <div className='flex flex-col gap-4'>
                 <p>

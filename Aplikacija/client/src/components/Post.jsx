@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 dayjs.extend(relativeTime);
 
 const Post = () => {
+  const [orders, setOrders] = useState([])
   const [post, setPost] = useState({});
   const [reviews, setReviews] = useState([]);
   const [title, setTitle] = useState('');
@@ -38,7 +39,7 @@ const Post = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        navigate('/posts'); // Redirect to home page after successful deletion
+        navigate('/posts');
       }
     } catch (error) {
       console.error(error);
@@ -49,7 +50,6 @@ const Post = () => {
 
     const fetchPost = async () => {
       const response = await axios.get(`http://localhost:5000/api/posts/${params.id}`);
-      console.log(response.data)
       setPost(response.data);
       setTitle(response.data.title);
       setDescription(response.data.description);
@@ -63,7 +63,6 @@ const Post = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/reviews/all/${params.id}`);
-        console.log(response.data);
         setReviews(response.data);
       } catch (error) {
         console.error(error);
@@ -102,7 +101,6 @@ const Post = () => {
   const createdAt = post.createdAt && dayjs(post.createdAt).fromNow();
   const userId = user && user._id;
   const workerId = post.workerId && post.workerId._id
-  console.log('workerId', workerId)
 
   let averageStars = 0; 
   if (reviews.length > 0) {
@@ -110,12 +108,50 @@ const Post = () => {
     averageStars = totalStars / reviews.length;
   }
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+        const response = await axios.get(`http://localhost:5000/api/orders/worker/${workerId}`, config)
+        console.log(response.data)
+        setOrders(response.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchOrders()
+  }, [workerId])
+
+  console.log(orders)
+
+  let responseTime = 0
+  let acceptedOrdersCount = 0
+  let totalResponseTime = 0
+  orders.forEach((order) => {
+    if (order.isAccepted) {
+      const createdTime = new Date(order.createdAt).getMinutes()
+      const updatedTime = new Date(order.updatedAt).getMinutes()
+      responseTime = updatedTime - createdTime
+
+      totalResponseTime += responseTime
+      acceptedOrdersCount++
+    }
+  })
+  
+  const averageResponseTime = totalResponseTime / acceptedOrdersCount
+
   return (
     <div>
-      <img className='object-cover w-full lg:h-[60vh]' src={proxy + post.imageUrl} alt={post.imageUrl} />
+      <img className='object-cover w-full 2xl:h-[60vh] sm:h-[40vh]' src={proxy + post.imageUrl} alt={post.imageUrl} />
       <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]'>
-        <div className='flex flex-col lg:flex-row gap-4'>
-          <div className='flex flex-col lg:w-1/2 lg:gap-4'>
+        <div className='flex flex-col 2xl:flex-row gap-4'>
+          <div className='flex flex-col 2xl:w-1/2 lg:gap-4'>
             <div className='flex justify-between items-center py-10'>
               <div className='flex gap-2'>
                 <img className='w-12 h-12 rounded-full object-cover' src={proxy + imageUrl} alt='' />
@@ -142,6 +178,17 @@ const Post = () => {
             </div>
             <div>
             {currentUser && currentUser.userId === userId && (
+              <div className='flex gap-4'>
+                <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='hover:text-green-500 duration-300'>
+                  <EditIcon />
+                </Link>
+                <Link onClick={deletePost} className='hover:text-red-500 duration-300'>
+                  <DeleteIcon />
+                </Link>
+              </div>
+            )}
+
+            {currentUser && currentUser.isAdministrator && (
               <div className='flex gap-4'>
                 <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='hover:text-green-500 duration-300'>
                   <EditIcon />
@@ -178,7 +225,7 @@ const Post = () => {
               </div> : <p className='mt-5'>Niko jos nije ostavio recenziju {':('}</p>}
             </div>
           </div>
-          <div className='flex flex-col gap-8 p-10 lg:sticky border border-gray-200 rounded-3xl shadow-lg lg:top-0 lg:h-full lg:w-1/3 lg:mx-auto text-center'>
+          <div className='flex flex-col gap-8 p-10 lg:sticky border border-gray-200 rounded-3xl shadow-lg lg:top-0 2xl:h-full 2xl:w-1/3 2xl:mx-auto text-center'>
             <div className='flex items-center justify-between'>
               <h2 className='text-xl'>Cena</h2>
               { price > 0 ? <p className='text-lg'>
@@ -190,10 +237,11 @@ const Post = () => {
             <p className='text-start font-thin'>
               {hireInfo}
             </p>
-            <div className='flex items-center gap-2'>
+            { averageResponseTime ?
+              <div className='flex items-center gap-4'>
               <AccessTimeIcon />
-              <p>{timeDuration}</p>
-            </div>
+              <p className='text-start'>{`Ovaj majstor odgovara u roku od ${averageResponseTime} minuta`}</p>
+            </div> : null}
             
             { currentUser && currentUser.userId !== userId && ( <Link to={`/create-order/${params.id}`} className='text-center px-4 text-white bg-orange-500 border rounded-xl sm:px-8 py-2 sm:hover:scale-105 sm:hover:bg-black sm:hover:text-white sm:duration-300  font-black'>
               Zaposli

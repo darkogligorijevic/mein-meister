@@ -20,7 +20,6 @@ const CreatePost = () => {
     category: state?.category || '',
     price: state?.price || '',
     hireInfo: state?.hireInfo || '',
-    timeDuration: state?.timeDuration || '',
     imageUrl: state?.imageUrl || null
   });
 
@@ -63,7 +62,6 @@ const CreatePost = () => {
     formData.append('price', inputs.price);
     formData.append('imageUrl', inputs.imageUrl);
     formData.append('hireInfo', inputs.hireInfo);
-    formData.append('timeDuration', inputs.timeDuration);
 
     const token = localStorage.getItem("token")
 
@@ -134,10 +132,6 @@ const CreatePost = () => {
                     <div>
                         <label className="text-gray-500" for="hireInfo">Ostavite informacije korisniku pre nego da Vas zaposle</label>
                         <input value={inputs.hireInfo} onChange={handleChange} name="hireInfo" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  
-                    </div>
-                    <div>
-                        <label className="text-gray-500" for="timeDuration">Koliko Vam je vremena potrebno za ovaj posao</label>
-                        <input value={inputs.timeDuration} onChange={handleChange} name="timeDuration" type="text" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />  
                     </div>
                     <div>
                         <label className="text-gray-500 dark:text-gray-200" for="description">Deskripcija</label>
