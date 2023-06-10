@@ -6,6 +6,7 @@ import { DateTimePicker } from 'react-rainbow-components';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 const SingleOrder = () => {
   const state = useLocation().state
@@ -50,14 +51,14 @@ const SingleOrder = () => {
         };
   
         const response = await axios.get(`http://localhost:5000/api/orders/${orderId}`, config);
+        console.log(response)
         const orderData = response.data;
   
         setInitialScheduledDate(orderData.scheduledDate);
         
-        // ... other code
       } catch (err) {
         console.log(err);
-        // TODO: Handle error and notify the user
+      
       }
     };
   
@@ -97,7 +98,7 @@ const SingleOrder = () => {
         scheduledDate: inputs.scheduledDate || order.scheduledDate,
       };
   
-      await axios.put(`http://localhost:5000/api/orders/${orderId}`, config, updatedData);
+      await axios.put(`http://localhost:5000/api/orders/${orderId}`, updatedData, config);
       navigate('/orders');
     } catch (err) {
       console.log(err);
@@ -125,19 +126,19 @@ const SingleOrder = () => {
             </p>
             <div className='flex flex-col md:flex-row gap-4'>
               <a href={`tel:${order.phoneNumber}`} className='md:self-start' >
-                <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+                <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-black hover:border-black hover:text-white hover:scale-105 duration-300 cursor-pointer'>
                   <PhoneIcon />
                   <span>{order.phoneNumber}</span>
                 </div>
               </a>
               <a href={`mailto:${order.userId && order.userId.email}`} className='md:self-start' >
-              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md text-gray-500 hover:bg-black hover:border-black hover:text-white hover:scale-105 duration-300 cursor-pointer'>
                   <EmailIcon />
                   <span>{order.userId && order.userId.email}</span>
                 </div>
               </a>
               
-              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md md:self-start text-gray-500 hover:bg-orange-500 hover:border-orange-500 hover:text-white hover:scale-105 duration-300 cursor-pointer'>
+              <div className='flex gap-4 px-8 py-2 border border-gray-400 rounded-md md:self-start text-gray-500 hover:bg-black hover:border-black hover:text-white hover:scale-105 duration-300 cursor-pointer'>
                 <CalendarMonthIcon />
                 <span>{formatDate(order.scheduledDate)}</span>
               </div>
@@ -145,9 +146,14 @@ const SingleOrder = () => {
             
             { !order.isAccepted ?
             <div className='flex flex-col gap-4'>
-                <p>
-                    Ukoliko imate bilo kojih dodatnih pitanja vezana za korisnika, savetujemo Vas da ga kontaktirate. Ukoliko i samo ukoliko se dogovorite za drugi termin, imate prava promeniti ga ovde.
-                </p>
+                <div className='p-16 shadow-lg rounded-md relative'>
+                  <p className='text-xl font-bold'>
+                      Ukoliko imate bilo kojih dodatnih pitanja vezana za korisnika, savetujemo Vas da ga kontaktirate. Ukoliko i samo ukoliko se dogovorite za drugi termin, imate prava promeniti ga ovde.
+                  </p>
+                  <div className='absolute top-2 left-0'>
+                    <PriorityHighIcon style={{ fontSize: '3rem', color: 'red' }}/>
+                  </div>
+                </div>
                 <div className='w-1/3'>
                     <DateTimePicker
                         value={inputs.scheduledDate || initialScheduledDate}
@@ -162,9 +168,9 @@ const SingleOrder = () => {
                         required={true}
                     />
                 </div>
-                <div>
-                    <button onClick={handleAccept} className='px-4 py-2 bg-green-500 text-white font-black'>Prihvati</button>
-                    <button className='px-4 py-2 bg-red-500 text-white font-black'>Odbij</button>
+                <div className='flex gap-4'>
+                    <button onClick={handleAccept} className='px-8 py-2 border rounded-md font-bold text-white bg-black hover:bg-transparent hover:text-black hover:border-black duration-300'>Prihvati</button>
+                    <button className='px-8 py-2 border rounded-md font-bold text-white bg-black hover:bg-transparent hover:text-black hover:border-black duration-300'>Odbij</button>
                 </div>
             </div> : null}
           </div>

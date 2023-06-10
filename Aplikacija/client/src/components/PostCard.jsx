@@ -61,8 +61,6 @@ const PostCard = ({
         </div>
         <div className='flex flex-col gap-2'>
           <h2 className='text-lg font-bold'>{title}</h2>
-          {/* Use parse() from html-react-parser to parse and render the formatted description */}
-          {/*<div className="formatted-description">{parse(description)}</div>*/}
           <TruncatedText text={description} maxLength={40} location={`/post/${id}`} />
         </div>
         <div>

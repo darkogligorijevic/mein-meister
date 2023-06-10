@@ -65,7 +65,6 @@ const CreateOrder = () => {
         },
       };
 
-      // Convert the selected time to the server's timezone
       const selectedTime = DateTime.fromJSDate(inputs.scheduledDate).setZone('Europe/London');
       const convertedTime = selectedTime.toISO();
 

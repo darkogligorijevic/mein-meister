@@ -21,7 +21,6 @@ const Post = () => {
   const [category, setCategory] = useState('');
   const [price,  setPrice] = useState('')
   const [hireInfo, setHireInfo] = useState('');
-  const [timeDuration, setTimeDuration] = useState('')
 
   const params = useParams();
   const navigate = useNavigate()
@@ -57,7 +56,6 @@ const Post = () => {
       setCategory(response.data.category)
       setPrice(response.data.price)
       setHireInfo(response.data.hireInfo)
-      setTimeDuration(response.data.timeDuration)
     };
 
     const fetchReviews = async () => {

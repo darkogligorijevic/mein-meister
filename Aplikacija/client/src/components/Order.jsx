@@ -4,7 +4,7 @@ import { AuthContext } from '../context/authContext';
 import { Link } from 'react-router-dom';
 
 const Order = () => {
-  const [items, setItems] = useState([]);  
+  const [items, setItems] = useState([]);
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -18,20 +18,26 @@ const Order = () => {
         };
 
         const userId = currentUser.userId;
+        let mergedItems = [];
 
-        const workerIdResponse = await axios.get(`http://localhost:5000/api/workers/userId/${userId}`);
-        const workerId = workerIdResponse.data._id;
+        if (currentUser.isMeister) {
+          const workerIdResponse = await axios.get(`http://localhost:5000/api/workers/userId/${userId}`);
+          const workerId = workerIdResponse.data._id;
 
-        const workerOrdersResponse = await axios.get(`http://localhost:5000/api/orders/worker/${workerId}`, config);
-        const workerOrders = workerOrdersResponse.data;
+          const workerOrdersResponse = await axios.get(`http://localhost:5000/api/orders/worker/${workerId}`, config);
+          const workerOrders = workerOrdersResponse.data;
 
-        const userOrdersResponse = await axios.get(`http://localhost:5000/api/orders/user/${userId}`, config);
-        const userOrders = userOrdersResponse.data;
+          const userOrdersResponse = await axios.get(`http://localhost:5000/api/orders/user/${userId}`, config);
+          const userOrders = userOrdersResponse.data;
 
-        const mergedItems = [
-          ...workerOrders.map((order) => ({ ...order, type: 'order' })),
-          ...userOrders.map((notification) => ({ ...notification, type: 'notification' })),
-        ];
+          mergedItems = [
+            ...workerOrders.map((order) => ({ ...order, type: 'order' })),
+            ...userOrders.map((notification) => ({ ...notification, type: 'notification' })),
+          ];
+        } else {
+          const userOrdersResponse = await axios.get(`http://localhost:5000/api/orders/user/${userId}`, config);
+          mergedItems = userOrdersResponse.data.map((notification) => ({ ...notification, type: 'notification' }));
+        }
 
         const sortedItems = mergedItems.sort((a, b) => {
           const dateA = new Date(a.scheduledDate);
