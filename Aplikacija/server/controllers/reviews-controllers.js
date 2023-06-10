@@ -2,7 +2,8 @@ const {validationResult} = require('express-validator')
 
 const HttpError = require('../models/HttpError')
 const Post = require('../models/Post');
-const Review = require('../models/Reviews')
+const Review = require('../models/Reviews');
+const Orders = require('../models/Order');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +51,8 @@ module.exports.postReviewByPostId = async (req,res,next) => {
   })
 
   try {
-    await newReview.save()
+    await newReview.save();
+    await Orders.deleteOne({postId:postId});
   } catch(err) {
     const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)

@@ -1,5 +1,5 @@
-const router = require('express').Router()
-const {check} = require('express-validator')
+const router = require('express').Router();
+const {check} = require('express-validator');
 
 const checkAuth = require('../middlewares/check-auth')
 const reviewControllers = require('../controllers/reviews-controllers')
