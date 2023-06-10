@@ -73,9 +73,7 @@ const CreatePost = () => {
             })
             .then((response) => {
               toast.success(response.data.message)
-              setTimeout(() => {
-                navigate(`/post/${postId}`);
-              }, 2000)
+              navigate(`/post/${postId}`);
             })
             .catch((error) => {
               console.log(error);

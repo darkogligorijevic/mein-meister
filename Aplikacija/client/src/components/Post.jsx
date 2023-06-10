@@ -14,6 +14,7 @@ dayjs.extend(relativeTime);
 const Post = () => {
   const [orders, setOrders] = useState([])
   const [post, setPost] = useState({});
+  const [isDeleteClicked, setIsDeleteClicked] = useState(false)
   const [reviews, setReviews] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -135,8 +136,10 @@ const Post = () => {
     if (order.isAccepted) {
       const createdTime = new Date(order.createdAt).getMinutes()
       const updatedTime = new Date(order.updatedAt).getMinutes()
-      responseTime = updatedTime - createdTime
-
+      console.log('created', createdTime)
+      console.log('updated', updatedTime)
+      responseTime = Math.abs(updatedTime - createdTime)
+      console.log('response', responseTime)
       totalResponseTime += responseTime
       acceptedOrdersCount++
     }
@@ -144,8 +147,12 @@ const Post = () => {
   
   const averageResponseTime = totalResponseTime / acceptedOrdersCount
 
+  const confirmDeleteProfile = () => {
+    setIsDeleteClicked(!isDeleteClicked)
+  }
+
   return (
-    <div>
+    <div className='relative'>
       <img className='object-cover w-full 2xl:h-[60vh] sm:h-[40vh]' src={proxy + post.imageUrl} alt={post.imageUrl} />
       <div className='mx-auto w-[320px] sm:w-[480px] md:w-[728px] 2xl:w-[1200px]'>
         <div className='flex flex-col 2xl:flex-row gap-4'>
@@ -180,7 +187,7 @@ const Post = () => {
                 <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='hover:text-green-500 duration-300'>
                   <EditIcon />
                 </Link>
-                <Link onClick={deletePost} className='hover:text-red-500 duration-300'>
+                <Link onClick={confirmDeleteProfile} className='hover:text-red-500 duration-300'>
                   <DeleteIcon />
                 </Link>
               </div>
@@ -191,7 +198,7 @@ const Post = () => {
                 <Link to={`/create-post/${workerId}?edit=${params.id}`} state={post} className='hover:text-green-500 duration-300'>
                   <EditIcon />
                 </Link>
-                <Link onClick={deletePost} className='hover:text-red-500 duration-300'>
+                <Link onClick={confirmDeleteProfile} className='hover:text-red-500 duration-300'>
                   <DeleteIcon />
                 </Link>
               </div>
@@ -247,6 +254,18 @@ const Post = () => {
           </div>
         </div>
       </div>
+      { isDeleteClicked ?        
+        <div className='fixed left-0 right-0 bottom-[20%] lg:left-[25%] md:bottom-[30%] lg:right-[25%]'>
+            <div className='fixed bg-black opacity-75 w-full h-full top-0 left-0 right-0'></div>
+            <div className='flex relative flex-col gap-8 items-center p-40 z-[1]'>
+              <div className='absolute top-0 w-full h-full bg-gray-900 z-[-1] blur-md rounded-2xl'></div>
+              <span className='2xl:text-4xl text-xl text-center font-black text-white'>Da li ste sigurni da zelite da izbrisete svoju uslugu?</span>            
+              <div className='flex gap-4 flex-col md:flex-row lg:gap-16'>
+                  <button onClick={deletePost} className='px-16 py-2 rounded-md bg-green-500 font-black text-white'>Da</button>
+                  <button onClick={confirmDeleteProfile} className='px-16 py-2 rounded-md bg-red-500 font-black text-white'>Ne</button>
+              </div>
+            </div>
+        </div> : null}
     </div>
   );
 };
