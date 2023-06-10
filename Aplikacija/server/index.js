@@ -16,25 +16,12 @@ const orderRoutes = require('./routes/orders-routes');
 const reviewRoutes = require('./routes/reviews-routes');
 
 const app = express();
-const server = http.createServer(app);
-const io = require('socket.io')(server);
+
 
 app.use('/public/images', express.static(path.join('public', 'images')));
 app.use(bodyParser.json({ extended: false })); // application/json
 app.use(cors());
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With,Content-Type,Accept,Authorization');
-//   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-// if(req.method === 'OPTIONS) {
-//   return next();
-// }
-//   next();
-// });
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/workers', workerRoutes);
@@ -58,7 +45,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
-  server.listen(process.env.PORT || 5000, () => {
+  app.listen(process.env.PORT || 5000, () => {
     console.log('Server is up and running');
   });
 }).catch((err) => {
@@ -66,13 +53,5 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
   throw error;
 });
 
-// Socket.IO integration
-io.on('connection', (socket) => {
-  console.log('Client connected');
 
-  // Handle client disconnection
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-});
 
