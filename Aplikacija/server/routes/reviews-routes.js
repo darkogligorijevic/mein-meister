@@ -8,6 +8,8 @@ router.get('/all/:postId',reviewControllers.getReviewsByPostId);
 
 router.get('/average/:postId',reviewControllers.getReviewsAverage);
 
+router.get('/:reviewId', reviewControllers.getReviewByUserId);
+
 router.use(checkAuth);
 
 router.post('/postId/:postId',

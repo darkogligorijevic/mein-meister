@@ -143,8 +143,8 @@ module.exports.getReviewsByPostId = async (req,res,next) => {
   let reviews;
   try {
     reviews = await Review.find({postId:postId})
-    .populate('postId','-_id')
-    .populate('userId','-_id')
+    .populate('postId')
+    .populate('userId','-password')
   } catch(err) {
     const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
     return next(error)
@@ -154,6 +154,35 @@ module.exports.getReviewsByPostId = async (req,res,next) => {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+module.exports.getReviewByUserId = async (req, res, next) => {
+  const {reviewId} = req.params
+  let review;
+  try {
+    review = await Review.findOne({_id:reviewId})
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+  if (!review) {
+    const error = new HttpError('Ne postoji takav review',404)
+    return next(error)
+  }
+
+  let reviews;
+  try {
+    reviews = await Review.find({reviewId:reviewId})
+    .populate('reviewId')
+    .populate('userId','-password')
+  } catch(err) {
+    const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnije',500)
+    return next(error)
+  }
+
+  res.status(200).json(reviews);
+
+}
 
 module.exports.deleteReviewByPostId = async (req,res,next) => {
   const {reviewId} = req.params;

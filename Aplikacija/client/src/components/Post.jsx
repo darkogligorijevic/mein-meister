@@ -8,6 +8,7 @@ import StarIcon from '@mui/icons-material/Star';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { toast } from 'react-toastify';
 
 dayjs.extend(relativeTime);
 
@@ -62,6 +63,7 @@ const Post = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/reviews/all/${params.id}`);
+        console.log(response.data)
         setReviews(response.data);
       } catch (error) {
         console.error(error);
@@ -136,10 +138,8 @@ const Post = () => {
     if (order.isAccepted) {
       const createdTime = new Date(order.createdAt).getMinutes()
       const updatedTime = new Date(order.updatedAt).getMinutes()
-      console.log('created', createdTime)
-      console.log('updated', updatedTime)
+      console.log(createdTime)
       responseTime = Math.abs(updatedTime - createdTime)
-      console.log('response', responseTime)
       totalResponseTime += responseTime
       acceptedOrdersCount++
     }
@@ -147,8 +147,39 @@ const Post = () => {
   
   const averageResponseTime = totalResponseTime / acceptedOrdersCount
 
+
+
   const confirmDeleteProfile = () => {
     setIsDeleteClicked(!isDeleteClicked)
+  }
+
+  const isEdited = (review) => {
+    const created = new Date(review.createdAt);
+    const edited = new Date(review.updatedAt);
+    
+    return created.getTime() !== edited.getTime();
+  };
+
+  const deleteReview = async (review) => {
+    try {
+
+      const token = localStorage.getItem('token')
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+      await axios.delete(`http://localhost:5000/api/reviews/${review}`, 
+        config
+      ).then((response) => {
+        toast.success(response.data.message)
+        window.location.reload();
+      }).catch((err) => {
+        toast.error(err.response.data.message)
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -219,7 +250,18 @@ const Post = () => {
                         <img className='w-8 h-8 rounded-full object-cover' src={proxy + review.userId.imageUrl} alt='' />
                         <div>
                           <p className='font-semibold'>{review.userId.firstName + ' ' + review.userId.lastName}</p>
-                          <p className='italic text-sm'>Napisano {review.createdAt && dayjs(review.createdAt).fromNow()}</p>
+                          { isEdited(review) ? <p className='italic text-sm'>Editovano {review.updatedAt && dayjs(review.updatedAt).fromNow()}</p> : <p className='italic text-sm'>Napisano {review.createdAt && dayjs(review.createdAt).fromNow()}</p>}
+                        </div>
+                        <div>
+                        { currentUser.userId === review.userId._id &&
+                          <div className='flex gap-4 '>
+                        <Link to={`/create-review/${params.id}?edit=${review._id}`} state={review} className='hover:text-green-500 duration-300'>
+                          <EditIcon style={{fontSize: '0.8rem'}} />
+                        </Link>
+                        <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
+                          <DeleteIcon style={{fontSize: '0.8rem'}} />
+                        </Link>
+                      </div>}
                         </div>
                       </div>
                       <p className='font-thin'>{review.star}/<span className='text-orange-500'>5</span></p>
