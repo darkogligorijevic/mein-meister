@@ -5,6 +5,7 @@ const HttpError = require('../models/HttpError');
 
 module.exports = (filePath) => {
   let imagePath = path.join(__dirname, '..', filePath);
+  console.log(imagePath);
   fs.unlink(imagePath, (err) => {
     if (err) {
       const error = new HttpError('Nešto je pošlo naopako, molimo probajte kasnje',500)

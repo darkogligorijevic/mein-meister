@@ -16,6 +16,7 @@ module.exports.postReviewByPostId = async (req,res,next) => {
   }
   const {postId} = req.params
   const {star, reviewText} = req.body
+ 
 
   let post;
   try {
@@ -58,7 +59,7 @@ module.exports.postReviewByPostId = async (req,res,next) => {
     return next(error)
   }
 
-  res.status(201).json({message:"Review je dodat"})
+  res.status(201).json({message:"Hvala što ste ostavili recenziju!"})
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
