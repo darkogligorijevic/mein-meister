@@ -23,6 +23,7 @@ const CategorySelection = ({ onChange, value }) => {
   } else {
     return (
       <select value={value} onChange={onChange} className='px-4 py-2 border border-gray-200 rounded-md outline-none'>
+          <option value=''>Izaberite delatnost...</option>
           <option value='Vodoinstalater'>Vodoinstalater</option>
           <option value='Električar'>Električar</option>
           <option value='Kućni majstor'>Kućni majstor</option>

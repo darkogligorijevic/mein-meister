@@ -63,7 +63,7 @@ const CreateReview = () => {
               </div>
               <div>
                 <label className="text-gray-500 dark:text-gray-200" htmlFor="reviewText">
-                 Recenzija
+                 Recenzija (minimum karaktera: 5)
                 </label>
                 <input
                   onChange={handleChange}

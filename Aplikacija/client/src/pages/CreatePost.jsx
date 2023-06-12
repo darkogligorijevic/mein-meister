@@ -124,7 +124,7 @@ const CreatePost = () => {
                         <SearchBar onCitySelect={handleCitySelect} /> 
                     </div>
                     <div>
-                        <label className="text-gray-500 dark:text-gray-200" for="price">Cena (RSD)</label>
+                        <label className="text-gray-500 dark:text-gray-200" for="price">Cena (RSD po satu)</label>
                         <input value={inputs.price} onChange={handleChange} name="price" type="number" className="block w-full px-4 py-2 mt-2 border text-gray-900 outline-none rounded-md" />
                     </div>
                     <div>
