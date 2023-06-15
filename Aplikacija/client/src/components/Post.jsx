@@ -95,7 +95,7 @@ const Post = () => {
   
   dayjs.locale('sr');
 
-  const user = post.workerId && post.workerId.userId;
+  const user = post.workerId && post.workerId.userId ? post.workerId.userId : null;
   const imageUrl = user && user.imageUrl;
   const firstName = user && user.firstName;
   const lastName = user && user.lastName;
@@ -253,15 +253,20 @@ const Post = () => {
                           { isEdited(review) ? <p className='italic text-sm'>Editovano {review.updatedAt && dayjs(review.updatedAt).fromNow()}</p> : <p className='italic text-sm'>Napisano {review.createdAt && dayjs(review.createdAt).fromNow()}</p>}
                         </div>
                         <div>
-                        { currentUser.userId === review.userId._id &&
-                          <div className='flex gap-4 '>
-                        <Link to={`/create-review/${params.id}?edit=${review._id}`} state={review} className='hover:text-green-500 duration-300'>
-                          <EditIcon style={{fontSize: '0.8rem'}} />
-                        </Link>
-                        <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
-                          <DeleteIcon style={{fontSize: '0.8rem'}} />
-                        </Link>
-                      </div>}
+                        {currentUser && currentUser.userId === (review.userId && review.userId._id) ? (
+                        <div className='flex gap-4'>
+                          <Link
+                            to={`/create-review/${params.id}?edit=${review._id}`}
+                            state={review}
+                            className='hover:text-green-500 duration-300'
+                          >
+                            <EditIcon style={{ fontSize: '0.8rem' }} />
+                          </Link>
+                          <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
+                            <DeleteIcon style={{ fontSize: '0.8rem' }} />
+                          </Link>
+                        </div>
+                        ) : null}
                         </div>
                       </div>
                       <p className='font-thin'>{review.star}/<span className='text-orange-500'>5</span></p>
