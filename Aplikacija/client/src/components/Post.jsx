@@ -63,10 +63,9 @@ const Post = () => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/reviews/all/${params.id}`);
-        console.log(response.data)
         setReviews(response.data);
       } catch (error) {
-        console.error(error);
+        toast.error(error.response.data.message)
       }
     };
 
@@ -95,7 +94,7 @@ const Post = () => {
   
   dayjs.locale('sr');
 
-  const user = post.workerId && post.workerId.userId;
+  const user = post.workerId && post.workerId.userId ? post.workerId.userId : null;
   const imageUrl = user && user.imageUrl;
   const firstName = user && user.firstName;
   const lastName = user && user.lastName;
@@ -119,7 +118,6 @@ const Post = () => {
           }
         }
         const response = await axios.get(`http://localhost:5000/api/orders/worker/${workerId}`, config)
-        console.log(response.data)
         setOrders(response.data)
       } catch (error) {
         console.log(error)
@@ -129,7 +127,6 @@ const Post = () => {
     fetchOrders()
   }, [workerId])
 
-  console.log(orders)
 
   let responseTime = 0
   let acceptedOrdersCount = 0
@@ -138,15 +135,12 @@ const Post = () => {
     if (order.isAccepted) {
       const createdTime = new Date(order.createdAt).getMinutes()
       const updatedTime = new Date(order.updatedAt).getMinutes()
-      console.log(createdTime)
       responseTime = Math.abs(updatedTime - createdTime)
       totalResponseTime += responseTime
       acceptedOrdersCount++
     }
   })
-  
   const averageResponseTime = totalResponseTime / acceptedOrdersCount
-
 
 
   const confirmDeleteProfile = () => {
@@ -178,7 +172,7 @@ const Post = () => {
         toast.error(err.response.data.message)
       })
     } catch (err) {
-      console.log(err)
+      toast.error(err.response.data.message)
     }
   }
 
@@ -253,15 +247,20 @@ const Post = () => {
                           { isEdited(review) ? <p className='italic text-sm'>Editovano {review.updatedAt && dayjs(review.updatedAt).fromNow()}</p> : <p className='italic text-sm'>Napisano {review.createdAt && dayjs(review.createdAt).fromNow()}</p>}
                         </div>
                         <div>
-                        { currentUser.userId === review.userId._id &&
-                          <div className='flex gap-4 '>
-                        <Link to={`/create-review/${params.id}?edit=${review._id}`} state={review} className='hover:text-green-500 duration-300'>
-                          <EditIcon style={{fontSize: '0.8rem'}} />
-                        </Link>
-                        <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
-                          <DeleteIcon style={{fontSize: '0.8rem'}} />
-                        </Link>
-                      </div>}
+                        {currentUser && currentUser.userId === (review.userId && review.userId._id) ? (
+                          <div className='flex gap-4'>
+                            <Link
+                              to={`/create-review/${params.id}?edit=${review._id}`}
+                              state={review}
+                              className='hover:text-green-500 duration-300'
+                            >
+                              <EditIcon style={{ fontSize: '0.8rem' }} />
+                            </Link>
+                            <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
+                              <DeleteIcon style={{ fontSize: '0.8rem' }} />
+                            </Link>
+                          </div>
+                        ) : null}
                         </div>
                       </div>
                       <p className='font-thin'>{review.star}/<span className='text-orange-500'>5</span></p>
