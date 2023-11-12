@@ -248,6 +248,7 @@ const Post = () => {
                         </div>
                         <div>
                         {currentUser && currentUser.userId === (review.userId && review.userId._id) ? (
+<<<<<<< HEAD
                           <div className='flex gap-4'>
                             <Link
                               to={`/create-review/${params.id}?edit=${review._id}`}
@@ -260,6 +261,20 @@ const Post = () => {
                               <DeleteIcon style={{ fontSize: '0.8rem' }} />
                             </Link>
                           </div>
+=======
+                        <div className='flex gap-4'>
+                          <Link
+                            to={`/create-review/${params.id}?edit=${review._id}`}
+                            state={review}
+                            className='hover:text-green-500 duration-300'
+                          >
+                            <EditIcon style={{ fontSize: '0.8rem' }} />
+                          </Link>
+                          <Link onClick={() => deleteReview(review._id)} className='hover:text-red-500 duration-300'>
+                            <DeleteIcon style={{ fontSize: '0.8rem' }} />
+                          </Link>
+                        </div>
+>>>>>>> a9910b9dab2783f3cc04ab7d4a66a3b3dd74f752
                         ) : null}
                         </div>
                       </div>
