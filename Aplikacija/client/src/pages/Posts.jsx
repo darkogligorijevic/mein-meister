@@ -90,16 +90,18 @@ const Posts = () => {
         averageStarsMap[post._id] = averageStarValues[index];
       });
       setAverageStars(averageStarsMap);
-      setIsLoading(false); // Set loading state to false once data is fetched
+      setIsLoading(false); 
     };
 
-    setIsLoading(true); // Set loading state to true before fetching average stars
+    setIsLoading(true); 
     fetchAverageStars();
   }, [posts]);
 
   const sortedPosts = [...posts].sort(
     (a, b) => averageStars[b._id] - averageStars[a._id]
   );
+
+  console.log(posts)
 
   return (
     <div className="py-[128px] min-h-screen">
@@ -124,7 +126,7 @@ const Posts = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 md:gap-8 gap-16">
-            {isLoading ? ( // Render a loading state while fetching data
+            {isLoading ? ( 
               <p>Ucitavanje...</p>
             ) : sortedPosts.length > 0 ? (
               sortedPosts.map((post) => (

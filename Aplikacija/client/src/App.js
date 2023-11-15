@@ -31,6 +31,7 @@ const Layout = () => {
   )
 }
 
+// Router
 const router = createBrowserRouter([
   {
     path: "/",
