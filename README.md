@@ -1,45 +1,50 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# MeinMeister
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+## Description
+**MeinMeister** is a faculty project aimed at revolutionizing the way we connect employers with skilled workers, or "meisters". In today's society, traditional methods of finding workers often fall short, and this web application is designed to address and overcome those challenges.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## Key Features
+- **Efficient Matching:** Utilizing advanced algorithms, MeinMeister ensures precise and efficient matching between employers and meisters based on skills and requirements.
+- **User-Friendly Interface:** A sleek and intuitive web interface makes it easy for both employers and meisters to navigate and utilize the platform effectively.
+- **Real-time Updates:** Stay up-to-date with real-time notifications on job matches, making the hiring process swift and responsive.
+- **Secure and Reliable:** Your data is important. MeinMeister prioritizes security and reliability, ensuring a safe environment for both employers and meisters.
 
----
+## How it works?
+### If you want to use it as a user:
+1. Create an account.
+2. Search for the meisters in your area.
+3. Choose a date and request the meister.
+4. Wait for the meister to accept request.
+5. When he's done with the job, rate him.
 
-## Edit a file
+### If you want to use it as a meister:
+1. Create an account.
+2. Click on the button `Become Meister` and fill the additional form.
+3. Publish a post about your expertise.
+4. Wait for the clients to get to you.
+5. Accept their request and do the job that you are meant to do.
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+## Why MeinMeister?
+- **Time Efficiency:** Say goodbye to time-consuming recruitment processes. MeinMeister streamlines the hiring process for quick and effective results.
+- **Modern Solution:** Embrace a modern approach to workforce recruitment, leaving behind outdated methods.
+- **Enhanced Connectivity:** Connect with the right talent effortlessly, fostering a more productive and successful working relationship.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/darkogligorijevic/meinmeister.git
+   ```
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the program:
+   ```bash
+   npm start
+   ```
 
----
+## Contributing
+Contributions are welcome! Feel free to open issues or pull requests.
 
-## Create a file
-
-Next, you’ll add a new file to this repository.
-
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
-
----
-
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+## License
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/darkogligorijevic/meinmeister/blob/master/LICENSE) file for details.
